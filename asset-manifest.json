@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/hyperia/static/css/main.88d283ff.css",
-    "main.js": "/hyperia/static/js/main.dbc7f124.js",
+    "main.js": "/hyperia/static/js/main.a1a213fe.js",
     "static/js/453.aa7839fe.chunk.js": "/hyperia/static/js/453.aa7839fe.chunk.js",
     "static/media/instagram.jpg": "/hyperia/static/media/instagram.7357b970f2c4c1a3d387.jpg",
     "static/media/facebook.png": "/hyperia/static/media/facebook.35b23c7ebe70e9a09ac8.png",
     "static/media/bot02.webp": "/hyperia/static/media/bot02.cebffbcb5631fbfb83f6.webp",
     "static/media/bo01.webp": "/hyperia/static/media/bo01.f67e2ed1218a105ddc0c.webp",
-    "service-worker.js": "/hyperia/service-worker.js",
+    "service-worker.js": "/service-worker.js",
     "static/media/bot05.webp": "/hyperia/static/media/bot05.9cd2bcfa1d20bc6990c4.webp",
     "static/media/bot06.webp": "/hyperia/static/media/bot06.dad9f0584f3d7b9be9ee.webp",
     "static/media/bot03.webp": "/hyperia/static/media/bot03.7422840b0ccac9a3863d.webp",
@@ -15,13 +15,13 @@
     "static/media/bot04.webp": "/hyperia/static/media/bot04.72f989ff7a5b550eb329.webp",
     "static/media/website.avif": "/hyperia/static/media/website.5203ab462760bf5e06a7.avif",
     "static/media/robot.avif": "/hyperia/static/media/robot.4630bf8350603d612f3e.avif",
-    "index.html": "/hyperia/index.html",
+    "index.html": "/index.html",
     "main.88d283ff.css.map": "/hyperia/static/css/main.88d283ff.css.map",
-    "main.dbc7f124.js.map": "/hyperia/static/js/main.dbc7f124.js.map",
+    "main.a1a213fe.js.map": "/hyperia/static/js/main.a1a213fe.js.map",
     "453.aa7839fe.chunk.js.map": "/hyperia/static/js/453.aa7839fe.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.88d283ff.css",
-    "static/js/main.dbc7f124.js"
+    "static/js/main.a1a213fe.js"
   ]
 }
