@@ -1,0 +1,1 @@
+export const GET_DATA_USER_AUTH = 'GET_DATA_USER_AUTH';

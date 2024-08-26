@@ -1,0 +1,163 @@
+[
+  [
+    {
+      "id": "1",
+      "sender": "emisor",
+      "text": "Hola, podrias indicarme",
+      "date": "17/7/2024 12:26:33",
+      "time": "17/7/2024 12:26:33"
+    },
+    {
+      "id": "2",
+      "sender": "receptor",
+      "text": "Hola usuario ...",
+      "date": "17/7/2024 12:26:33",
+      "time": "17/7/2024 12:26:33"
+    },
+    {
+      "id": "3",
+      "sender": "emisor",
+      "text": "Si, ya tengo información ...",
+      "date": "17/7/2024 12:26:33",
+      "time": "17/7/2024 12:26:33"
+    }
+  ],
+  [
+    {
+      "id": "4",
+      "sender": "emisor",
+      "text": "Hola, podrias indicarme 2",
+      "date": "17/7/2024 12:26:33",
+      "time": "17/7/2024 12:26:33"
+    },
+    {
+      "id": "5",
+      "sender": "receptor",
+      "text": "Hola usuario ...",
+      "date": "17/7/2024 12:26:33",
+      "time": "17/7/2024 12:26:33"
+    },
+    {
+      "id": "6",
+      "sender": "emisor",
+      "text": "Si, ya tengo información ...",
+      "date": "17/7/2024 12:26:33",
+      "time": "17/7/2024 12:26:33"
+    }
+  ],
+  [
+    {
+      "id": "7",
+      "sender": "emisor",
+      "text": "Hola, podrias indicarme 3",
+      "date": "17/7/2024 12:26:33",
+      "time": "17/7/2024 12:26:33"
+    },
+    {
+      "id": "8",
+      "sender": "receptor",
+      "text": "Hola usuario ...",
+      "date": "17/7/2024 12:26:33",
+      "time": "17/7/2024 12:26:33"
+    },
+    {
+      "id": "9",
+      "sender": "emisor",
+      "text": "Si, ya tengo información ...",
+      "date": "17/7/2024 12:26:33",
+      "time": "17/7/2024 12:26:33"
+    }
+  ],
+  [
+    {
+      "id": "10",
+      "sender": "emisor",
+      "text": "Hola, podrias indicarme 4",
+      "date": "17/7/2024 12:26:33",
+      "time": "17/7/2024 12:26:33"
+    },
+    {
+      "id": "11",
+      "sender": "receptor",
+      "text": "Hola usuario ...",
+      "date": "17/7/2024 12:26:33",
+      "time": "17/7/2024 12:26:33"
+    },
+    {
+      "id": "12",
+      "sender": "emisor",
+      "text": "Si, ya tengo información ...",
+      "date": "17/7/2024 12:26:33",
+      "time": "17/7/2024 12:26:33"
+    }
+  ],
+  [
+    {
+      "id": "13",
+      "sender": "receptor",
+      "text": "Hola, podrias indicarme extra",
+      "date": "17/7/2024 12:26:33",
+      "time": "17/7/2024 12:26:33"
+    },
+    {
+      "id": "14",
+      "sender": "emisor",
+      "text": "Hola usuario ...",
+      "date": "17/7/2024 12:26:33",
+      "time": "17/7/2024 12:26:33"
+    },
+    {
+      "id": "15",
+      "sender": "emisor",
+      "text": "Si, ya tengo información ...",
+      "date": "17/7/2024 12:26:33",
+      "time": "17/7/2024 12:26:33"
+    }
+  ],
+  [
+    {
+      "id": "16",
+      "sender": "receptor",
+      "text": "Hola, podrias indicarme extra",
+      "date": "17/7/2024 12:26:33",
+      "time": "17/7/2024 12:26:33"
+    },
+    {
+      "id": "17",
+      "sender": "emisor",
+      "text": "Hola usuario ...",
+      "date": "17/7/2024 12:26:33",
+      "time": "17/7/2024 12:26:33"
+    },
+    {
+      "id": "18",
+      "sender": "emisor",
+      "text": "Si, ya tengo información ...",
+      "date": "17/7/2024 12:26:33",
+      "time": "17/7/2024 12:26:33"
+    }
+  ],
+  [
+    {
+      "id": "19",
+      "sender": "receptor",
+      "text": "Hola, podrias indicarme extra",
+      "date": "17/7/2024 12:26:33",
+      "time": "17/7/2024 12:26:33"
+    },
+    {
+      "id": "20",
+      "sender": "emisor",
+      "text": "Hola usuario ...",
+      "date": "17/7/2024 12:26:33",
+      "time": "17/7/2024 12:26:33"
+    },
+    {
+      "id": "21",
+      "sender": "emisor",
+      "text": "Si, ya tengo información ...",
+      "date": "17/7/2024 12:26:33",
+      "time": "17/7/2024 12:26:33"
+    }
+  ]
+]

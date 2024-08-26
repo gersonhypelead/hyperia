@@ -1,0 +1,11 @@
+html,
+body {
+    padding: 0;
+    margin: 0;
+    background: #fff;
+    font-family: "Roboto", sans-serif;
+}
+
+#root {
+    /* padding: 24px; */
+}

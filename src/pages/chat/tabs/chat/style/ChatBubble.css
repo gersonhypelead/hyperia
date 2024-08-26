@@ -1,0 +1,55 @@
+/* ChatBubble.css */
+
+.chat-bubble {
+    max-width: 60%;
+    padding: 10px 15px;
+    border-radius: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-size: 16px;
+    line-height: 1.4;
+    position: relative;
+}
+
+.chat-bubble p {
+    margin: 0;
+}
+
+/* Estilos para el emisor */
+.chat-bubble.emisor {
+    background-color: #0084ff;
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 0;
+}
+
+/* Estilos para el receptor */
+.chat-bubble.receptor {
+    background-color: #e5e5ea;
+    color: black;
+    align-self: flex-start;
+    border-bottom-left-radius: 0;
+}
+
+/* Añadir flechas a las burbujas */
+.chat-bubble.emisor::after {
+    /* content: "";
+    position: absolute;
+    top: 0;
+    right: -10px;
+    border-width: 10px 0 10px 10px;
+    border-style: solid;
+    border-color: transparent transparent transparent #0084ff; */
+}
+
+.chat-bubble.receptor::after {
+    /* content: "";
+    position: absolute;
+    top: 0;
+    left: -10px;
+    border-width: 10px 10px 10px 0;
+    border-style: solid;
+    border-color: transparent #e5e5ea transparent transparent; */
+}
