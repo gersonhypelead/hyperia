@@ -40,7 +40,8 @@ const Login = () => {
   return (
     <div className="container">
       <div className="left">
-        <h1>Bienvenido a Hyperia</h1>
+        <p>Bienvenido a </p>
+        <h1>Hyperia</h1>
       </div>
       <div className="right">
         {
