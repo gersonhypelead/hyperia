@@ -1,18 +1,89 @@
+/*-------------------------TEXTO--------------------------*/
+.text-hola{
+  font-size: 40px;
+  font-weight: 500;
+  margin-top: 0px;
+  margin-bottom: 40px;
+}
+
+
+
+/*--------------------------MENSAJES----------------------*/
+.cardTokens .ant-card{
+  border-radius: 25px;
+  box-shadow: 0 4px 8px rgba(12, 12, 12, 0.2);
+  height: 130px !important;
+}
+
+/*---------------------------GRAFICO----------------------*/
+.graficoDonut .recharts-legend-item-text, .graficoDonut svg .recharts-layer text{
+  color: #0C5257 !important;
+  font-weight: 500 !important;
+}
+
+
+/*--------------------------BOTONES----------------------*/
+.btn-container .ant-btn{
+  padding: 24px 48px;
+  border-radius:24px ;
+  background: #0C5257;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: color 0.4s ease;
+  z-index: 1;
+}
+.btn-container .ant-btn:hover {
+  background: linear-gradient(137deg, rgba(34, 242, 255, 1) 0%, rgba(0, 255, 194, 1) 100%) !important;
+  transition: top 0.6s ease !important;
+  color: #0C5257 !important; 
+}
+
+/*--------------------------CARDBOTS--------------------*/
+
+.cardbots{
+  background-color:#fff ;
+  padding: 40px;
+  border-radius: 50px;
+  box-shadow: 0 0px 2px rgba(12, 12, 12, 0.2);
+}
 .custom-card {
   transition: box-shadow 0.3s ease;
   cursor: pointer;
+  background-color: rgba(34, 242, 255, 0.3);
+  border-radius: 25px;
+  box-shadow: 0 4px 8px rgba(12, 12, 12, 0.2);
 }
-
+.custom-card:hover {
+  box-shadow: 0 4px 12px rgba(34, 242, 255, 0.5);
+  border: 1px solid #fff;
+}
 .custom-card-select {
   transition: box-shadow 0.3s ease;
   cursor: pointer;
-  border: 2px solid rgb(255, 208, 0);
+  border: 2px solid rgba(34, 242, 255, 1);
+  background: linear-gradient(137deg, rgba(34, 242, 255, 1) 0%, rgba(0, 255, 194, 1) 100%);
+  border-radius: 25px;
+  box-shadow: 0 4px 8px rgba(12, 12, 12, 0.2);
+}
+.ant-card-body div div span{
+  font-size: 16px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+.ant-card-actions li{
+  margin: 8px 0px 12px 0 !important;
+}
+.ant-card-actions button span{
+  font-weight: 500;
+  color: #0C5257;
+}
+.ant-card-actions button span:hover{
+  color: rgba(34, 242, 255, 1);
 }
 
-
-.custom-card:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
 
 .card-description {
   height: 100px;
