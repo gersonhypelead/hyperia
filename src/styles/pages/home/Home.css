@@ -1,3 +1,26 @@
+/*-------------------------------------BARRA LATERAL-----------------------*/
+.ant-layout-sider{
+  border-top-right-radius: 50px !important;
+}
+.ant-layout-sider .ant-menu-item-active{
+  background-color: rgba(34, 242, 255, 0.3) !important;
+  border-radius: 24px;
+}
+.ant-layout-sider .ant-menu-item-selected{
+  background-color: rgba(34, 242, 255, 0.5) !important;
+  border-radius: 24px;
+  color: #0C5257;
+}
+.ant-layout-sider-children div:nth-child(3) span:nth-child(3){
+  font-weight: 500 !important;
+}
+/*-----------------------------HEADER----------------------------------------*/
+.ant-layout-header{
+  background-color: #F5F5F5 !important;
+}
+
+
+/*PAGINA DE INICIO-----------------------------------------------------------------------------------------------------------------------*/
 /*-------------------------TEXTO--------------------------*/
 .text-hola{
   font-size: 40px;
@@ -90,4 +113,83 @@
   overflow: hidden;
   text-overflow: ellipsis;
   /* white-space: nowrap; */
+}
+
+
+/*TABS-----------------------------------------------------------------------------------------*/
+.ant-tabs-nav-wrap .ant-tabs-nav-list{
+  justify-content: center;
+}
+.ant-tabs-nav{
+  box-shadow: 0 4px 8px rgba(12, 12, 12, 0.2);
+}
+.ant-tabs-nav-wrap .ant-tabs-tab{
+  padding: 15px 25px !important;
+  color: #0C5257 !important;
+  border-radius: 30px;
+  border: none !important;
+}
+.ant-tabs-nav-wrap .ant-tabs-tab-active{
+  background-color: rgba(34, 242, 255, 0.5);
+
+}
+.ant-tabs-nav-wrap .ant-tabs-tab:hover{
+  background-color: rgba(34, 242, 255, 0.3) !important;
+}
+
+.ant-tabs-content-holder .ant-steps-item-active .ant-steps-item-icon{
+  background-color: rgba(34, 242, 255, 1) !important;
+  border: 1px solid #0C5257 !important;
+}
+.ant-tabs-content-holder .ant-steps-item-icon{
+  background-color: rgba(34, 242, 255, 0.3) !important;
+  border: 1px solid #0c525744 !important;
+  color: #0c525744 !important;
+}
+.ant-tabs-content-holder .ant-steps-item-active .ant-steps-icon{
+  color: #0C5257 !important;
+}
+.ant-tabs-content-holder .ant-steps-item-title::after{
+  background-color: rgba(34, 242, 255, 1) !important;
+}
+.ant-tabs-content-holder{
+  border-radius:50px !important;
+  box-shadow: 0 4px 8px rgba(12, 12, 12, 0.2);
+}
+.ant-tabs-content-holder .ant-card{
+  border-radius:50px !important;
+  padding: 20px;
+}
+.ant-tabs-content-holder .ant-steps-item-title{
+  font-weight: 500;
+
+}
+.ant-tabs-content-holder .ant-input:hover{
+  border: rgba(34, 242, 255, 1) 1px solid;
+}
+.ant-tabs-content-holder button:nth-child(1){
+  padding: 24px 48px;
+  border-radius:24px ;
+  background: #0C5257;
+  color: white;
+  border: 2px solid #0C5257;
+  font-weight: 500;
+  cursor: pointer;
+  position: relative;
+}
+.ant-tabs-content-holder button:nth-child(2){
+  padding: 22px 46px;
+  border-radius:24px ;
+  background: transparent;
+  color: #0C5257;
+  border: 2px solid #0C5257;
+  font-weight: 500;
+  cursor: pointer;
+  position: relative;
+}
+.ant-tabs-content-holder button:hover {
+  background: linear-gradient(137deg, rgba(34, 242, 255, 1) 0%, rgba(0, 255, 194, 1) 100%) !important;
+  border: 2px solid #0C5257 !important;
+  transition: top 0.6s ease !important;
+  color: #0C5257 !important; 
 }

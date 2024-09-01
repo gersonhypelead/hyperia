@@ -73,9 +73,10 @@ const Chat: React.FC = () => {
       })}
       tabBarStyle={{
         background: 'white',
-        paddingLeft: '10px',
-        paddingBottom: '10px',
-        borderRadius: '10px'
+        padding: '20px',
+        borderRadius: '50px', 
+        justifyContent:'center',
+        textAlign: 'center'
       }}
     />
   );

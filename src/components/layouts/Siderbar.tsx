@@ -91,7 +91,7 @@ const Sidebar: React.FC<LayoutProps> = ({ children }) => {
             padding: 24,
             minHeight: 280,
             // background: colorBgContainer,
-            borderRadius: borderRadiusLG,
+            borderRadius: 'borderRadiusLG',
           }}
         >
           {children}
