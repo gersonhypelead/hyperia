@@ -37,7 +37,9 @@
   box-shadow: 0 4px 8px rgba(12, 12, 12, 0.2);
   height: 130px !important;
 }
-
+.ant-card-body .ant-typography{
+  border-radius: 24px !important;
+}
 /*---------------------------GRAFICO----------------------*/
 .graficoDonut .recharts-legend-item-text, .graficoDonut svg .recharts-layer text{
   color: #0C5257 !important;
@@ -116,12 +118,9 @@
 }
 
 
-/*TABS-----------------------------------------------------------------------------------------*/
+/*---------------------------------------------------TABS-----------------------------------------------------------------------------------------*/
 .ant-tabs-nav-wrap .ant-tabs-nav-list{
   justify-content: center;
-}
-.ant-tabs-nav{
-  box-shadow: 0 4px 8px rgba(12, 12, 12, 0.2);
 }
 .ant-tabs-nav-wrap .ant-tabs-tab{
   padding: 15px 25px !important;
@@ -152,7 +151,7 @@
 .ant-tabs-content-holder .ant-steps-item-title::after{
   background-color: rgba(34, 242, 255, 1) !important;
 }
-.ant-tabs-content-holder{
+.ant-card{
   border-radius:50px !important;
   box-shadow: 0 4px 8px rgba(12, 12, 12, 0.2);
 }
@@ -170,9 +169,9 @@
 .ant-tabs-content-holder button:nth-child(1){
   padding: 24px 48px;
   border-radius:24px ;
-  background: #0C5257;
+  background: #0C5257 !important;
   color: white;
-  border: 2px solid #0C5257;
+  border: 2px solid #0C5257 !important;
   font-weight: 500;
   cursor: pointer;
   position: relative;
@@ -192,4 +191,111 @@
   border: 2px solid #0C5257 !important;
   transition: top 0.6s ease !important;
   color: #0C5257 !important; 
+}
+.ant-space-item .ant-btn-icon-only{
+  padding: 20px !important;
+}
+.ant-space-item button{
+  color: #fff !important;
+}
+.ant-space-item button:hover{
+  color: #0C5257 !important;
+}
+.ant-space-item .ant-btn-icon-only svg{
+  color: #fff;
+}
+.ant-space-item .ant-btn-icon-only svg:hover{
+  color: #0C5257
+}
+.ant-upload-select .ant-upload button{
+  color: #0C5257 !important;
+}
+/*-----------------------------------CHAT--------------------------------------*/
+.contenedor-chat{
+  border-radius: 25px !important;
+}
+
+
+/*----------------------------------GRAFICO------------------------------------*/
+.Table-Container-Actions-Global{
+  margin: 30px 0 0 30px
+}
+.ant-table-wrapper {
+  margin-top: 20px !important;
+}
+.ant-pagination-item-link{
+  color: #fff !important;
+  border-radius: 20px !important;
+  background-color: #0C5257 !important;
+  border: 2px solid #0C5257 !important;
+}
+.ant-pagination-item-active{
+  border: #0C5257 2px solid !important;
+  border-radius: 20px !important;
+  color: #0C5257 !important;
+}
+.ant-pagination-item:hover{
+  border-radius: 20px;
+  border: #0C5257 1px solid !important;
+}
+.ant-tabs-content .ant-spin-container{
+  background-color: #fff;
+  padding-top: 5px;
+  padding-bottom: 10px  ;
+  margin-top: 30px;
+  border-radius: 50px ;
+  box-shadow: 0 4px 8px rgba(12, 12, 12, 0.2);
+}
+.ant-spin-container .ant-table-pagination-right{
+  margin-right: 30px !important;
+}
+.ant-spin-container .ant-table {
+  margin: 20px;
+  padding: 10px;
+  border-radius: 25px;
+  box-shadow: 0 4px 8px rgba(12, 12, 12, 0.2);
+}
+.ant-spin-container .ant-progress-bg, .ant-spin-container .ant-progress-bg-outer{
+  background:  linear-gradient(90deg, rgba(34, 242, 255, 1) 0%, rgba(0, 255, 194, 1) 70%) !important;
+    --progress-line-stroke-color: linear-gradient(to right, rgba(34, 242, 255, 1), rgba(0, 255, 194, 1)) !important;
+}
+.recharts-bar:nth-child(even) path {
+  fill: rgba(34, 242, 255, 0.8) !important;
+}
+.recharts-bar path {
+  fill: rgba(0, 255, 194, 0.8)
+}
+.recharts-bar path:hover{
+  border: #0C5257 2px solid !important;
+}
+.recharts-default-legend .recharts-surface path{
+  fill: rgba(0, 255, 194, 0.8);
+}
+.recharts-default-legend .recharts-legend-item-text{
+  color: #0C5257 !important
+}
+.recharts-default-legend .legend-item-1 path{
+  fill: rgba(34, 242, 255, 0.8) !important
+}
+
+/*--------------------USUARIOS-----------------*/
+.boton-crear{
+  padding: 24px 48px;
+  border-radius:24px ;
+  background: #0C5257;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: color 0.4s ease;
+  z-index: 1;
+  margin-left: 24px;
+  border: #0C5257 2px solid;
+}
+.boton-crear:hover {
+  background: linear-gradient(137deg, rgba(34, 242, 255, 1) 0%, rgba(0, 255, 194, 1) 100%) !important;
+  transition: top 0.6s ease !important;
+  color: #0C5257 !important; 
+  border: #0C5257 2px solid;
 }

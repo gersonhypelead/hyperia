@@ -76,7 +76,8 @@ const Chat: React.FC = () => {
         padding: '20px',
         borderRadius: '50px', 
         justifyContent:'center',
-        textAlign: 'center'
+        textAlign: 'center',
+        boxShadow: '0 4px 8px rgba(12, 12, 12, 0.2)'
       }}
     />
   );
