@@ -10,6 +10,7 @@ import {
   FETCH_TRAIN_CONVERSATION
 } from '../../../../../src/constantes/chatBots/Entrenar/ChatBots'; // Ajusta la ruta según corresponda
 import config from '../../../../config';
+import fetchWithIP from '../../utils/fetchHeaders';
 
 export const fetchChatBotsRequestReducer = (): ChatBotsActionTypes => ({
   type: FETCH_CHATBOTS_REQUEST
@@ -29,7 +30,7 @@ export const GetDataChatBotsReducer = (): ThunkAction<Promise<void>, RootState, 
   dispatch(fetchChatBotsRequestReducer());
   try {
     const id_usuario = localStorage.getItem('id_usuario');
-    const response = await fetch(config.API_URL + 'usuarios/'+id_usuario+'/chatbots');
+    const response = await fetchWithIP('usuarios/' + id_usuario + '/chatbots', { method: "GET" });
     const data = await response.json();
     dispatch(fetchChatBotsSuccessReducer(data));
   } catch (error) {
@@ -49,18 +50,7 @@ export const GetDataTrainsReducer = (
     type: FETCH_LIST_TRAINS,
     payload: []
   })
-  await fetch(config.API_URL +
-    'chatbots/' + localStorage.getItem("chat_seleccionado") + '/entrenamientos',
-    {
-      mode: 'cors',
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-type': 'application/json',
-        // 'usutoken': localStorage.getItem("usutoken"),
-      },
-    }
-  )
+  await fetchWithIP('chatbots/' + localStorage.getItem("chat_seleccionado") + '/entrenamientos', { method: "GET" })
     .then(async res => {
       return res.json()
     })
@@ -87,24 +77,12 @@ export const GetConversacionReducer = (
 
   let chat_converation: any = [];
 
-  await fetch(config.API_URL +
-    'entrenamientos/' + trainID + '/mensajes',
-    {
-      mode: 'cors',
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-type': 'application/json',
-        // 'usutoken': localStorage.getItem("usutoken"),
-      },
-    }
+  await fetchWithIP('entrenamientos/' + trainID + '/mensajes', { method: "GET" }
   )
     .then(async res => {
       return res.json()
     })
     .then(data => {
-      console.log(data);
-
       data.map((dat: any) => {
         chat_converation.push({
           "id": dat.id,
@@ -137,21 +115,16 @@ export const AddCaseTrainReducer = (
   unknown,
   Action<string>
 > => async (dispatch, getState) => {
+  console.log("===============================================================&&")
 
-  await fetch(config.API_URL +
-    'chatbots/' + localStorage.getItem("chat_seleccionado") + '/entrenamientos/pregunta',
+  await fetchWithIP('chatbots/' + localStorage.getItem("chat_seleccionado") + '/entrenamientos/pregunta',
     {
-      mode: 'cors',
       method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-type': 'application/json',
-        // 'usutoken': localStorage.getItem("usutoken"),
-      },
-      body: JSON.stringify({
-        "descripcion": typeCase
-      })
+    },
+    {
+      descripcion: typeCase
     }
+
   )
     .then(async res => {
       return res.json()

@@ -22,7 +22,7 @@ const Pricing: React.FC = () => {
           <div
             style={{ marginBottom: '30px' }}
           >Pruebe las funciones del plan Team durante 14 días · No se requiere tarjeta de crédito · No se necesita codificación</div>
-          <Button type='primary'>Comienza tu prueba gratuita</Button>
+          <Button className='boton-crear' type='primary'>Comienza tu prueba gratuita</Button>
         </Col>
       </Row>
       <Row justify="center" gutter={[16, 16]} style={{ marginTop: '20px' }}>

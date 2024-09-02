@@ -10,6 +10,7 @@ import {
   CREATE_USER_REQUEST,
   CREATE_USER_SUCCESS,
   CREATE_USER_FAILURE,
+  SET_USUARIOS_FILTERS,
 } from '../../../constantes/admin/users/Users';
 
 const initialState = {
@@ -26,6 +27,7 @@ const initialState = {
   loading: false,
   error: null,
   user: null,
+  filters:{},
 };
 
 const Users = (state = initialState, action: any) => {
@@ -95,6 +97,11 @@ const Users = (state = initialState, action: any) => {
         ...state, 
         loading: false, 
         error: action.error };
+    case SET_USUARIOS_FILTERS:
+      return {
+        ...state,
+        filters: action.payload,
+      };
     default:
       return state;
   }

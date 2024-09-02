@@ -138,25 +138,28 @@ Hable con el usuario en el idioma en el que le habla.
 
   const handleSubmit = async (values: any, setSubmitting: any) => {
     try {
-
+      console.log("activityHours");
+      console.log(values);
+      values.horarioActividad = "124";
+      
       await dispatch(submitFormData(values));
       const response = await dispatch(sendFormDataToEndpoint(values));
 
-      if(response){
+      if (response) {
         notification.success({
           message: 'Éxito',
           description: 'Los datos se han enviado correctamente.',
           placement: 'topRight',
         });
         navigate('/home');
-      }else {
+      } else {
         notification.error({
           message: 'Error',
           description: 'Lo sentimos no pudimos crear el bot correctamente.',
           placement: 'topRight',
         });
       }
-      
+
 
     } catch (error) {
       console.error('Error al enviar los datos:', error);
@@ -169,6 +172,7 @@ Hable con el usuario en el idioma en el que le habla.
       setSubmitting(false);
     }
   };
+
   const steps = [
     {
       title: 'Primer Paso',
@@ -190,10 +194,14 @@ Hable con el usuario en el idioma en el que le habla.
               <div style={{ marginBottom: '5px' }}>
                 Horario de Actividad <QuestionCircleOutlined onClick={info} />
               </div>
-              <TimePicker.RangePicker />
+              <TimePicker.RangePicker
+                onChange={(e) => {
+                  console.log(e);
+
+                }}
+              />
               {/* <Field name="activityHours">
                 {({ field }: any) => (
-                  // <Input {...field} />
                   <TimePicker.RangePicker {...field}/>
                 )}
               </Field> */}

@@ -3,12 +3,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Card, Button, Modal, Dropdown, Menu, Row, Col, Skeleton } from 'antd';
 import { MoreOutlined } from '@ant-design/icons';
 import AvatarRobot from '../../../assets/img/avatars/robot.avif';
-import '../../../styles/pages/home/Home.css';
 import {
   GetDataChatsBotsHomeReducer,
   SelectBotReducer
 } from '../../../redux/actions/home/Home';
-import { RootState, AppDispatch } from '../../../redux/store/store';
+import { AppDispatch } from '../../../redux/store/store';
+import '../../../styles/pages/home/Home.css';
+import { ResetConversationReducer } from '../../../redux/actions/chatBots/Chat/Chat';
 
 const { Meta } = Card;
 
@@ -78,7 +79,7 @@ const CardBot: React.FC = () => {
         rex_chatsbots.length > 0 && (
           <Row gutter={[16, 16]}>
             {rex_chatsbots.slice(0, 10).map((chatbot: any, index: number) => (
-              <Col key={index} xl={8} md={12} sm={24}>
+              <Col key={index} xl={6} md={12} sm={24}>
                 <Card
                   className={
                     localStorage.getItem("chat_seleccionado") == chatbot.id ||
@@ -93,9 +94,15 @@ const CardBot: React.FC = () => {
                     <Button type="link" onClick={showModal}>Leer más</Button>
                   ]}
                   onClick={() => {
-                    localStorage.setItem("chat_seleccionado", chatbot.id)
-                    setChatbot_seleccionado(chatbot.id)
-                    dispatch(SelectBotReducer(index, !chatbot.select))
+                    localStorage.setItem("chat_seleccionado", chatbot.id);
+                    setChatbot_seleccionado(chatbot.id);
+                    dispatch(SelectBotReducer(index, !chatbot.select));
+                    dispatch(ResetConversationReducer());
+                    if(chatbot.conversacionId){
+                      localStorage.setItem("TAB_CHAT_CONVERSACION_ID", chatbot.conversacionId);
+                    }else {
+                      localStorage.removeItem("TAB_CHAT_CONVERSACION_ID");
+                    }
                   }}
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

@@ -9,6 +9,7 @@ import {
   RobotOutlined,
   DollarOutlined,
   TeamOutlined,
+  UsergroupAddOutlined 
 } from '@ant-design/icons';
 import { Layout, Menu, theme, Button, Avatar } from 'antd';
 import { Link } from 'react-router-dom';
@@ -24,8 +25,8 @@ const items = [
   { label: 'Nuestros Chats', icon: RobotOutlined, path: '/nuestros-chats' },
   { label: 'Precios', icon: DollarOutlined, path: '/precios' },
   { label: 'Usuarios', icon: TeamOutlined, path: '/usuarios' },
-  { label: 'Crud Usuario', icon: DollarOutlined, path: '/create-user' },
-  { label: 'Editar Usuario', icon: DollarOutlined, path: '/edit-user' },
+  { label: 'Tipos de Usuarios', icon: UsergroupAddOutlined, path: '/tipos-usuarios' },
+  
 ].map((item, index) => ({
   key: String(index + 1),
   icon: React.createElement(item.icon),
@@ -90,7 +91,7 @@ const Sidebar: React.FC<LayoutProps> = ({ children }) => {
             padding: 24,
             minHeight: 280,
             // background: colorBgContainer,
-            borderRadius: borderRadiusLG,
+            borderRadius: 'borderRadiusLG',
           }}
         >
           {children}

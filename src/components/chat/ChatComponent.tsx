@@ -13,6 +13,7 @@ import { CreateConversationReducer, CreateMessageTrainReducer, ResetConversation
 import {
   ReloadOutlined
 } from '@ant-design/icons';
+import { CreateConversationSupportReducer } from '../../redux/actions/chatBots/Chat/ChatSupport';
 
 interface Message {
   id: number;
@@ -30,6 +31,8 @@ interface ChatProps {
   nombreChat?: string;
   inputPlaceholder?: string;
   logoChat?: string;
+  resetChat?: boolean;
+  supportChat?: boolean;
 }
 
 const ChatComponent: React.FC<ChatProps> = ({
@@ -42,6 +45,8 @@ const ChatComponent: React.FC<ChatProps> = ({
   nombreChat = 'Nombre del chat',
   inputPlaceholder = 'Tipear un mensaje',
   logoChat,
+  resetChat = true,
+  supportChat = false
 }) => {
   const dispatch: AppDispatch = useDispatch();
   const [messages, setMessages] = useState<Message[]>([
@@ -68,7 +73,7 @@ const ChatComponent: React.FC<ChatProps> = ({
   }, [data]);
 
   const handleSendMessage = async (messageSend: string) => {
-
+    // console.log("mandando mensaje ---", messageSend)
     if (newMessage.trim()) {
       setNewMessage('');
 
@@ -83,7 +88,8 @@ const ChatComponent: React.FC<ChatProps> = ({
       setMessages([...conversacion]);
 
       if (!modeBot) {
-        const rpta_bot: any = await dispatch(CreateConversationReducer(messageSend));
+
+        const rpta_bot: any = supportChat ? await dispatch(CreateConversationSupportReducer(messageSend)) : await dispatch(CreateConversationReducer(messageSend))
 
         const messageRecived: Message = {
           id: messages.length + 2,
@@ -96,7 +102,6 @@ const ChatComponent: React.FC<ChatProps> = ({
       } else {
         dispatch(CreateMessageTrainReducer(sender, idConversation, messageSend))
         setSender(sender === 'emisor' ? 'receptor' : 'emisor');
-
       }
     }
   };
@@ -132,42 +137,58 @@ const ChatComponent: React.FC<ChatProps> = ({
           <div
             style={{
               marginRight: '20px',
+              background: 'transparent'
             }}
           >
             <Avatar size={40} icon={<UserOutlined />} />
           </div>
-          <div>
+          <div
+            style={{
+              background: 'transparent'
+            }}
+          >
             <div
-              style={{ fontWeight: 'bold', fontSize: '18px', lineHeight: '1' }}
+              style={{ fontWeight: 'bold', fontSize: '18px', lineHeight: '1', background: 'transparent' }}
             >
               {nombreChat}
             </div>
-            <div>
+            <div
+              style={{
+                background: 'transparent',
+                marginTop: '4px'
+              }}
+            >
               <CheckCircleTwoTone twoToneColor="#52c41a" />
-              <span style={{ marginLeft: '5px' }}>Available</span>
+              <span style={{ marginLeft: '5px' }}>Disponible</span>
             </div>
           </div>
-          <div
-            style={{
-              position: "absolute",
-              right: "20px"
-            }}
-          >
-            <Tooltip
-              title="Nuevo Chat"
-            >
-              <ReloadOutlined
+          {
+            resetChat ? (
+              <div
                 style={{
-                  fontSize: '20px',
-                  cursor: 'pointer'
+                  position: "absolute",
+                  right: "20px",
+                  background: 'transparent'
                 }}
-                onClick={() => {
-                  localStorage.removeItem('TAB_CHAT_CONVERSACION_ID');
-                  dispatch(ResetConversationReducer())
-                }}
-              />
-            </Tooltip>
-          </div>
+              >
+                <Tooltip
+                  title="Nuevo Chat"
+                >
+                  <ReloadOutlined
+                    style={{
+                      fontSize: '20px',
+                      cursor: 'pointer'
+                    }}
+                    onClick={() => {
+                      localStorage.removeItem('TAB_CHAT_CONVERSACION_ID');
+                      dispatch(ResetConversationReducer())
+                    }}
+                  />
+                </Tooltip>
+              </div>
+            ) : null
+          }
+
         </div>
 
         {/* BODY */}

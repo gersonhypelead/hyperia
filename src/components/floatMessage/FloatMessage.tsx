@@ -1,9 +1,17 @@
 import { useState, useEffect } from 'react';
-import './FloatMessage.css';
 import defaultImg from '../../assets/img/avatars/robot.avif';
 import ChatComponent from '../chat/ChatComponent';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../redux/store/store';
+import './FloatMessage.css';
+import { GetConversationSupportReducer } from '../../redux/actions/chatBots/Chat/ChatSupport';
 
 const FloatMessage = () => {
+  const dispatch: AppDispatch = useDispatch();
+  const {
+    rex_conversation_support_chat
+  } = useSelector((state: RootState) => state.conversation);
+
   const [showMessage, setShowMessage] = useState(true);
   const [showTooltip, setShowTooltip] = useState(false);
   const [position, setPosition] = useState({ top: '90vh', left: '90vw' });
@@ -16,6 +24,14 @@ const FloatMessage = () => {
 
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    GetConversation();
+  }, [])
+
+  const GetConversation = async () => {
+    await dispatch(GetConversationSupportReducer());
+  }
 
   const handleDragEnd = (e: any) => {
     const screenWidth = window.innerWidth;
@@ -46,35 +62,39 @@ const FloatMessage = () => {
 
   return (
     <div
-      className={`notification-container ${
-        isTooltipExpanded ? 'top-right' : ''
-      }`}
+      className={`notification-container ${isTooltipExpanded ? 'top-right' : ''
+        }`}
       style={{ top: position.top, left: position.left }}
-      draggable
-      onDragEnd={handleDragEnd}
+      draggable={false}
+    // onDragEnd={handleDragEnd}
     >
       {showTooltip && (
         <div
           className={`tooltip-container ${isTooltipExpanded ? 'expanded' : ''}`}
         >
-          <ChatComponent />
+          <ChatComponent
+            nombreChat='Soporte Vezzos'
+            editBubble={false}
+            resetChat={false}
+            supportChat={true}
+            data={rex_conversation_support_chat}
+          />
         </div>
       )}
 
       <div
         className="circle"
-        style={{ backgroundImage: `url(${defaultImg})` }}
+        style={{ backgroundImage: `url(${defaultImg})`, cursor: 'pointer' }}
         onClick={handleCircleClick}
       >
         <div className="notification-dot"></div>
       </div>
       {showMessage && (
         <div
-          className={`notification-message-dos ${
-            position.left === '0px' ? 'right' : 'left'
-          }`}
+          className={`notification-message-dos ${position.left === '0px' ? 'right' : 'left'
+            }`}
         >
-          mensaje example
+          Hola, necesitas ayuda?
         </div>
       )}
     </div>

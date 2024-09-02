@@ -17,8 +17,9 @@ const TabConversations: React.FC = () => {
   const [listConversationsData, setListConversationsData] = useState<any[]>([]);
 
   useEffect(() => {
+    console.log("11Conversaciones: -----------------------");
     dispatch(GetDataConversationsReducer());
-  }, []);
+  }, [localStorage.getItem("chat_seleccionado")]);
 
   useEffect(() => {
     if (rex_conversations.length > 0) {
@@ -35,7 +36,7 @@ const TabConversations: React.FC = () => {
   const getHistoryConversation = async (id_conversation: number) => {
     const conver = await dispatch(GetConversationReducer(id_conversation, false))
     console.log(conver);
-    
+
     setChatData(conver)
     console.log("datos");
   }

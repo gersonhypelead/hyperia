@@ -4,7 +4,8 @@ import {
   Pie,
   Cell,
   ResponsiveContainer,
-  Tooltip
+  Tooltip,
+  Legend
 } from 'recharts';
 
 interface ChartDonutProps {
@@ -34,7 +35,7 @@ const renderCustomizedLabel = (
 
 const ChartDonut: React.FC<ChartDonutProps> = ({
   data,
-  colors = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'],
+  colors = ['#00FFC2', '#22F2FF'],
   innerRadius = 60,
   outerRadius = 80,
   paddingAngle = 5,
@@ -42,7 +43,7 @@ const ChartDonut: React.FC<ChartDonutProps> = ({
   cy = '50%',
 }) => {
   return (
-    <div style={{ width: '100%', height: '170px' }}>
+    <div style={{ width: '100%', height: '250px' }}>
       <ResponsiveContainer>
         <PieChart>
           <Pie
@@ -59,7 +60,17 @@ const ChartDonut: React.FC<ChartDonutProps> = ({
               <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
             ))}
           </Pie>
-          <Tooltip />
+          <Tooltip formatter={(value: number, name: string) => `${value}`} />
+          <Legend
+            layout="horizontal"
+            verticalAlign="bottom"
+            align="left"
+            payload={data.map((item, index) => ({
+              value: item.name,
+              type: 'square',
+              color: colors[index % colors.length],
+            }))}
+          />
         </PieChart>
       </ResponsiveContainer>
     </div>

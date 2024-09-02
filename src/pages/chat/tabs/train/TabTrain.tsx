@@ -4,7 +4,12 @@ import { Button, ConfigProvider } from 'antd';
 import { AntDesignOutlined } from '@ant-design/icons';
 import { css } from '@emotion/css';
 import { useDispatch, useSelector } from 'react-redux';
-import { AddCaseTrainReducer, GetConversacionReducer, GetDataChatBotsReducer, GetDataTrainsReducer } from '../../../../redux/actions/chatBots/Entrenar/ChatBots'; // Importa la acción correcta
+import {
+  AddCaseTrainReducer,
+  GetConversacionReducer,
+  GetDataChatBotsReducer,
+  GetDataTrainsReducer
+} from '../../../../redux/actions/chatBots/Entrenar/ChatBots'; // Importa la acción correcta
 import ChatComponent from '../../../../components/chat/ChatComponent';
 import type { SelectProps } from 'antd';
 import TextArea from 'antd/es/input/TextArea';

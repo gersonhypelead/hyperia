@@ -8,6 +8,7 @@ import {
   ConversationsActionTypes
 } from '../../../../../src/constantes/chatBots/Conversation/Conversation'; // Ajusta la ruta según corresponda
 import config from '../../../../config'
+import fetchWithIP from '../../utils/fetchHeaders';
 
 export const fetchConversationsRequestReducer = (): ConversationsActionTypes => ({
   type: FETCH_CONVERSATIONS_REQUEST
@@ -24,9 +25,11 @@ export const fetchConversationsFailureReducer = (error: string): ConversationsAc
 });
 
 export const GetDataConversationsReducer = (): ThunkAction<Promise<void>, RootState, unknown, Action<string>> => async (dispatch) => {
+  console.log("Conversaciones: -----------------------");
+  
   dispatch(fetchConversationsRequestReducer());
   try {
-    const response = await fetch(config.API_URL+'chatbots/'+localStorage.getItem("chat_seleccionado")+'/conversaciones');
+    const response = await fetchWithIP('chatbots/' + localStorage.getItem("chat_seleccionado") + '/conversaciones', { method: "GET" });
     const data = await response.json();
     dispatch(fetchConversationsSuccessReducer(data));
   } catch (error) {

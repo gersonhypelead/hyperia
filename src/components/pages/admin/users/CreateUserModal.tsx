@@ -71,16 +71,6 @@ const CreateUserModal: React.FC<CreateUserModalProps> = ({ visible, onClose }) =
           <Input />
         </Form.Item>
         <Form.Item
-          name="email"
-          label="Email"
-          rules={[
-            { required: true, message: 'Por favor ingrese el email del usuario' },
-            { type: 'email', message: 'El email ingresado no es válido' }
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
           name="usuario"
           label="Usuario"
           rules={[{ required: true, message: 'Por favor ingrese el nombre de usuario' }]}

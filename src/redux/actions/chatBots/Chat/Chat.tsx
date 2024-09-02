@@ -5,6 +5,7 @@ import {
   GET_CONVERSATION_TAB_CHAT
 } from '../../../../constantes/chatBots/chat/Chat';
 import config from '../../../../config';
+import fetchWithIP from '../../utils/fetchHeaders';
 
 export const CreateConversationReducer = (
   mensaje: string
@@ -15,22 +16,15 @@ export const CreateConversationReducer = (
   Action<string>
 > => async (dispatch, getState) => {
 
+  console.log("entrenamiento")
+
   let id_conversacion = localStorage.getItem("TAB_CHAT_CONVERSACION_ID");
   if (!id_conversacion) {
-    await fetch(config.API_URL + 'chatbots/' + localStorage.getItem("chat_seleccionado") + '/conversaciones',
-      {
-        mode: 'cors',
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-type': 'application/json',
-          // 'usutoken': localStorage.getItem("usutoken"),
-        },
-      }
-    )
-      .then(async res => {
-        return res.json()
-      })
+    await fetchWithIP('chatbots/' + localStorage.getItem("chat_seleccionado") + '/conversaciones', {
+      method: 'POST',
+    }).then(async res => {
+      return res.json()
+    })
       .then(data => {
         // console.log(data);
         localStorage.setItem("TAB_CHAT_CONVERSACION_ID", data.id)
@@ -43,36 +37,43 @@ export const CreateConversationReducer = (
 
   let mensaje_bot = "";
 
-  await fetch(config.API_URL +
-    'chatbots/' + localStorage.getItem("chat_seleccionado") + '/conversaciones/' + id_conversacion + '/mensajes',
+  await fetchWithIP('chatbots/' + localStorage.getItem("chat_seleccionado") + '/conversaciones/' + id_conversacion + '/mensajes', {
+    method: 'POST',
+
+  },
     {
-      mode: 'cors',
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-type': 'application/json',
-        // 'usutoken': localStorage.getItem("usutoken"),
-      },
-      body: JSON.stringify({
-        "contenido": mensaje,
-        "emisor": "USUARIO"
-      }),
+      contenido: mensaje,
+      emisor: "USUARIO"
     }
-  )
-    .then(async res => {
-      return res.json()
-    })
+  ).then(async res => {
+    return res.json()
+  })
     .then(data => {
       console.log(data);
       mensaje_bot = data;
       // localStorage.setItem("TAB_CHAT_CONVERSACION_ID", data.id)
-
-
     }).catch((error) => {
       console.log(error)
     });
 
   return mensaje_bot;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   // const bots: any = getState().home.rex_chatsbots;
   // bots[index]['select'] = true;
@@ -93,6 +94,7 @@ export const CreateMessageTrainReducer = (
   unknown,
   Action<string>
 > => async (dispatch, getState) => {
+  console.log("llego aqui ,c raetemessage train reducee")
 
   if (sender == "emisor") {
     sender = "USUARIO";
@@ -107,17 +109,14 @@ export const CreateMessageTrainReducer = (
     },
   ]
 
-  await fetch(config.API_URL + 'entrenamientos/' + idConversation + '/mensajes',
+  await fetchWithIP('entrenamientos/' + idConversation + '/mensajes',
     {
-      mode: 'cors',
       method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-type': 'application/json',
-        // 'usutoken': localStorage.getItem("usutoken"),
-      },
-      body: JSON.stringify(bodu)
-    }
+
+    },
+    bodu
+
+
   )
     .then(async res => {
       return res.json()
@@ -146,15 +145,9 @@ export const GetConversationReducer = (
   if (id_conversation === 0) id_conversation = localStorage.getItem("TAB_CHAT_CONVERSACION_ID");
 
   if (id_conversation) {
-    await fetch(config.API_URL + 'chatbots/' + localStorage.getItem("chat_seleccionado") + '/conversaciones/' + id_conversation + '/mensajes',
+    await fetchWithIP('chatbots/' + localStorage.getItem("chat_seleccionado") + '/conversaciones/' + id_conversation + '/mensajes',
       {
-        mode: 'cors',
         method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-          'Content-type': 'application/json',
-          // 'usutoken': localStorage.getItem("usutoken"),
-        },
       }
     )
       .then(async res => {

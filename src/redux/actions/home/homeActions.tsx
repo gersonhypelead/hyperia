@@ -1,4 +1,5 @@
 import config from '../../../config';
+import fetchWithIP from '../utils/fetchHeaders';
 
 export const SUBMIT_FORM_DATA = 'SUBMIT_FORM_DATA';
 
@@ -18,17 +19,16 @@ export const sendFormDataToEndpoint = (formData: any) => {
         retrasoRespuesta: parseInt(formData.retrasoRespuesta, 10),
         animacionEscribir: formData.typingAnimation,
         comportamiento: formData.comportamiento,
+        horarioActividad: formData.horarioActividad,
       }
 
       const id_usuario = localStorage.getItem('id_usuario');
 
-      const response = await fetch(config.API_URL + 'usuarios/' + id_usuario + '/chatbots', {
+      const response = await fetchWithIP('usuarios/' + id_usuario + '/chatbots', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(nuevo),
-      });
+      },
+       nuevo,
+      );
 
       if (response.ok) {
         const result = await response.json();

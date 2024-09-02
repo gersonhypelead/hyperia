@@ -7,16 +7,20 @@ import Conversation from './chatBost/conversation/Conversation'
 import Users from './users/Users'
 import TiposUsuarios from './tipo_usuarios/TiposUsuarios'
 import Auth from './auth/Auth'
+import PermisosTipoUsuario from './permissions/PermissionsUsers';
+import AuditoriasReducer from './auditorias/Auditorias';
 
 const createRootReducer = (history: any) => combineReducers({
-    router: connectRouter(history),
-    home : Home,
-    chatBots : ChatBots, 
-    tabChat : TabChat, 
-    conversation : Conversation,
-    users: Users,
-    tipoUsuarios: TiposUsuarios,
-    auth: Auth
+  router: connectRouter(history),
+  home: Home,
+  chatBots: ChatBots,
+  tabChat: TabChat,
+  conversation: Conversation,
+  users: Users,
+  tipoUsuarios: TiposUsuarios,
+  permisosTiposUsuarios: PermisosTipoUsuario,
+  auth: Auth,
+  auditorias: AuditoriasReducer
 });
 
 export default createRootReducer;

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { userCredential } from '../../auth/types/userTypes';
 import { useLogin } from '../../hooks/useLogin';
 import './style.css';
+import config from '../../config'
 
 const Login = () => {
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ const Login = () => {
   };
 
   const loginGoogle = () => {
-    window.location.href = 'http://localhost:3005/auth/google';
+    window.location.href =`${config.API_URL}auth/google`;
   };
 
   return (

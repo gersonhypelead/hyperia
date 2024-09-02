@@ -57,31 +57,18 @@ const ChatComponent: React.FC = () => {
 
       <Row>
         <Col md={12} xl={12}>
-          <div
+          <div className='contenedor-chat'
             style={{
               width: '95%',
               height: '600px',
               // background: 'red',
-              borderRadius: '10px',
+              borderRadius: '25px',
               position: 'relative',
               border: '1px solid #C4C4C4'
             }}
           >
             {/* HEAD */}
-            <div
-              style={{
-                display: 'flex',
-                paddingLeft: '20px',
-                paddingRight: '20px',
-                paddingTop: '10px',
-                paddingBottom: '10px',
-                background: '#03A9F4',
-                borderTopLeftRadius: '10px',
-                borderTopRightRadius: '10px',
-                marginBottom: '10px',
-                color: 'white',
-                alignItems: 'center'
-              }}
+            <div className='header-chat'
             >
               <div
                 style={{

@@ -7,7 +7,7 @@ import { PieChart, Pie, Sector } from 'recharts';
 // const theme = createTheme(ThemePallete.greenTheme);
 const color = {
   primary: 'black',
-  secondary: 'red',
+  secondary: 'rgba(34, 242, 255, 0.8)',
 };
 
 const renderActiveShape = (props: any) => {

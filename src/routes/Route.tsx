@@ -11,7 +11,9 @@ import Register from '../pages/register/Register';
 import ProtectedRoute from './ProtectedRoute';
 import GoogleCallback from './../auth/googleCallback'
 import Users from '../pages/admin/users/Users';
-
+import UserProfile from '../components/pages/user/PerfilUser';
+import TypeUsersChat from '../pages/admin/typesUsers/TypesUsers';
+import PermisosPage from '../components/pages/admin/typeUsers/PermissionsTypeUser';
 
 
 const AppRoutes: React.FC = () => {
@@ -27,6 +29,10 @@ const AppRoutes: React.FC = () => {
             <Route path="/nuestros-chats" element={<OurChats />} />
             <Route path="/precios" element={<Pricing />} />
             <Route path="/usuarios" element={<Users />} />
+            <Route path="/tipos-usuarios" element={<TypeUsersChat />} />
+            <Route path="/tipos-usuarios/:tipoUsuarioId/permisos" element={<PermisosPage />} />
+            <Route path="/profile" element={<UserProfile />} />
+            <Route path="*" element={<Chat />} />
             <Route path="*" element={<Home />} />
           
           </Route>

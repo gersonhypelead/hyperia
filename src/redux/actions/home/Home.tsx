@@ -6,6 +6,7 @@ import {
   GET_DATA_CHATSBOTS_HOME
 } from '../../../constantes/Home/Home';
 import config from '../../../config';
+import fetchWithIP from '../utils/fetchHeaders';
 
 // Acción asíncrona para obtener los datos de los chatbots
 export const GetDataChatsBotsHomeReducer = (): ThunkAction<
@@ -20,7 +21,7 @@ export const GetDataChatsBotsHomeReducer = (): ThunkAction<
 
     const id_usuario = localStorage.getItem('id_usuario');
 
-    const data = await fetch(config.API_URL + 'usuarios/' + id_usuario + '/chatbots').then(res => res.json());
+    const data = await fetchWithIP('usuarios/' + id_usuario + '/chatbots', {method: 'GET'}).then(response => response.json())
 
     dispatch({
       type: 'FETCH_CHATBOT_SUCCESS',
@@ -45,7 +46,7 @@ export const UpdateVarMundoReducer = (): ThunkAction<
 > => async (dispatch) => {
   try {
     const id_usuario = localStorage.getItem('id_usuario');
-    const response = await fetch(config.API_URL + 'usuarios/'+id_usuario+'/chatbots');
+    const response = await fetchWithIP('usuarios/'+id_usuario+'/chatbots');
     const data = await response.json();
 
     dispatch({
