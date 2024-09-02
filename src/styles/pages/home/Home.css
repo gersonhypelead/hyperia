@@ -42,7 +42,7 @@
 }
 /*---------------------------GRAFICO----------------------*/
 .graficoDonut .recharts-legend-item-text, .graficoDonut svg .recharts-layer text{
-  color: #0C5257 !important;
+  fill: #0C5257 !important;
   font-weight: 500 !important;
 }
 
@@ -130,7 +130,10 @@
 }
 .ant-tabs-nav-wrap .ant-tabs-tab-active{
   background-color: rgba(34, 242, 255, 0.5);
-
+  border: 2px #0C5257 solid !important;
+}
+.ant-tabs-nav-wrap .ant-tabs-tab-active .ant-tabs-tab-btn{
+  color: #0C5257 !important;
 }
 .ant-tabs-nav-wrap .ant-tabs-tab:hover{
   background-color: rgba(34, 242, 255, 0.3) !important;

@@ -31,7 +31,7 @@ const Home: React.FC = () => {
         <Col xs={24} lg={24}>
           {/* Columna para CardTokens y CardBot */}
           <Row justify="center" gutter={[16, 16]} style={{ marginBottom: '20px'}}>
-            <Col xl={4} md={12} className='graficoDonut' style={{ paddingBottom: '20px',backgroundColor: '#fff', borderRadius:'25px', boxShadow: '0 4px 8px rgba(12,12,12, 0.2)'}}>
+            <Col xl={4} md={12} className='graficoDonut' style={{ paddingBottom: '20px',backgroundColor: '#fff', borderRadius:'50px', boxShadow: '0 4px 8px rgba(12,12,12, 0.2)'}}>
               {/* Columna para el gráfico tipo Donut */}
               {/* <div style={{
                 border: '1px solid #f0f0f0',
