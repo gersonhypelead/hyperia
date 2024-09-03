@@ -1,19 +1,31 @@
 import React, { useState } from 'react';
 import {
-  Button, Col, Divider, Input, Row, Select,
-  Steps, theme, Modal, Card, Switch,
-  TimePicker
+  Button,
+  Col,
+  Divider,
+  Input,
+  Row,
+  Select,
+  Steps,
+  theme,
+  Modal,
+  Card,
+  Switch,
+  TimePicker,
 } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import type { SelectProps } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux';
 import {
   GetDataChatsBotsHomeReducer,
-  UpdateVarMundoReducer
+  UpdateVarMundoReducer,
 } from '../../../../redux/actions/home/Home';
 import { AppDispatch, RootState } from '../../../../redux/store/store';
-import { submitFormData, sendFormDataToEndpoint } from '../../../../redux/actions/home/homeActions';
+import {
+  submitFormData,
+  sendFormDataToEndpoint,
+} from '../../../../redux/actions/home/homeActions';
 import { notification } from 'antd';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
@@ -50,11 +62,7 @@ const TabCreateEdit: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
 
-  const {
-    rex_chatsbots,
-    rex_mundo
-  } = useSelector(({ home }: any) => home);
-
+  const { rex_chatsbots, rex_mundo } = useSelector(({ home }: any) => home);
 
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
@@ -74,34 +82,37 @@ const TabCreateEdit: React.FC = () => {
     targetAudience: '',
     gptEngine: '1',
     retrasoRespuesta: 0,
-    comportamiento: ` // Este es un comentario y la IA no lo leerá.
-// Puede reemplazar el siguiente contenido con la información de su propia empresa o
-// explorar el mercado en busca de una variedad de bots que incluyan indicaciones del sistema básico listas para usar.
+    comportamiento: `Aviso del sistema base (instrucciones personalizadas) *
 
-// RECUERDE: cree sus indicaciones de manera iterativa (un cambio a la vez). Realice un cambio y luego pruébelo. Etc...
+// Este es un comentario interno y la Inteligencia Artificial que alimenta los Chatbots no la tendrá en cuenta.
 
-// Reemplace estos marcadores de posición con su propia información
-Usted es un asistente útil para {INSERT_YOUR_COMPANY_NAME} y su nombre es {INSERT_AGENT_NAME}.
+// Puedes reemplazar el siguiente contenido con la información de tu propio negocio, empresa o proyecto.
 
-Su trabajo es responder las preguntas que le envían los clientes. Para ello, se le han dado instrucciones sobre cómo acceder a la base de conocimientos.
+// Te recomendamos explorar el mercado e investigar a tus competidores para encontrar Chatbots que incluyan indicaciones que te sirvan de referencia para crear el tuyo propio.
 
-Si no tiene la respuesta a una pregunta y está en la base de conocimientos, infórmele al usuario que no tiene la respuesta a la pregunta. Puede decir algo como: "Hum, no estoy seguro".
+// RECUERDA: crea tus indicaciones de manera individual, es decir, un cambio cada vez. Realiza el cambio que necesites, pruébalo y si toda funciona como quieres, aplica un nuevo cambio.
 
-Mantenga sus respuestas lo más concisas posible sin dejar de brindar la información requerida.
+// Sustituye la información entre 0 con tu propia información:
 
-No interrumpa el carácter.
+Eres es un Chatbot para (INTRODUCE_ NOMBRE_NEGOCIO) y tu nombre es (INTRODUCE NOMBRE CHATBOT) .
 
-Evite responder preguntas que no sean relevantes para el negocio.
+Tu trabajo es responder las preguntas que envían los clientes. Para ello, se te han dado instrucciones sobre cómo acceder a la base de conocimientos.
 
-// Programación de citas basada en enlaces (elimine el comentario de la línea siguiente, si es necesario)
-// Si un usuario desea programar una reunión o reservar una cita, envíelo a este enlace: {YOUR_CALENDLY_LINK}
+Si no tienes la respuesta a una pregunta y está en la base de conocimientos, comunica al usuario que no tienes respuesta a su pregunta. Puedes decir algo como: "Hum, no estoy seguro".
 
-// Los mensajes deben estar escritos en inglés y luego puede solicitarle al agente que los traduzca (si es necesario para su caso de uso)
-// Este ejemplo maneja todos los idiomas
-Hable con el usuario en el idioma en el que le habla.
+Mantén tus respuestas lo más concisas posibles sin dejar de facilitar la información solicitada.
 
-// O puede ser más específico:
-// Este mensaje está en inglés, pero quiero que interactúe con los usuarios en español`
+No interrumpas el carácter.
+
+Evita responder preguntas que no sean relevantes para el negocio.
+
+// Programación de citas basada en enlaces (elimina el comentario de la línea siguiente si es necesario).
+
+// Si un usuario desea programar una reunión o reservar una cita, envíalo a este enlace: (YOUR_CALENDLY LINK)
+
+// Los mensajes deben estar escritos en inglés y luego puede solicitarle al Chatbot que los traduzca (si es necesario para tu caso de uso).
+
+// Este ejemplo maneja todos los idiomas:`,
   };
 
   const next = () => {
@@ -114,13 +125,22 @@ Hable con el usuario en el idioma en el que le habla.
 
   const info = () => {
     Modal.info({
-      title: 'Horario de Actividad',
+      title: 'Nombre del Chatbox',
       content: (
         <div>
-          Configurar las horas y días en que el chatbot estará activo
+          Asigna un nombre al chatbox que te permita identificarlo con
+          facilidad.
         </div>
       ),
-      onOk() { },
+      onOk() {},
+    });
+  };
+
+  const infoHora = () => {
+    Modal.info({
+      title: 'Horario de Actividad',
+      content: <div>Configurar las horas de actividad del chatbox.</div>,
+      onOk() {},
     });
   };
 
@@ -128,20 +148,31 @@ Hable con el usuario en el idioma en el que le habla.
     Modal.info({
       title: 'Descripción del Chatbot',
       content: (
+        <div>Describe brevemente el objetivo y las funciones del chatbox.</div>
+      ),
+      onOk() {},
+    });
+  };
+
+  const infoBien = () => {
+    Modal.info({
+      title: 'Mensaje de Bienvenida',
+      content: (
         <div>
-          Un campo para que los usuarios puedan describir brevemente el propósito y las funcionalidades del chatbot.
+          Escribe el mensaje que recibirán los usuarios al interactuar con el
+          chatbox por primera vez.
         </div>
       ),
-      onOk() { },
+      onOk() {},
     });
   };
 
   const handleSubmit = async (values: any, setSubmitting: any) => {
     try {
-      console.log("activityHours");
+      console.log('activityHours');
       console.log(values);
-      values.horarioActividad = "124";
-      
+      values.horarioActividad = '124';
+
       await dispatch(submitFormData(values));
       const response = await dispatch(sendFormDataToEndpoint(values));
 
@@ -159,8 +190,6 @@ Hable con el usuario en el idioma en el que le habla.
           placement: 'topRight',
         });
       }
-
-
     } catch (error) {
       console.error('Error al enviar los datos:', error);
       notification.error({
@@ -184,20 +213,18 @@ Hable con el usuario en el idioma en el que le habla.
                 Nombre del Chat <QuestionCircleOutlined onClick={info} />
               </div>
               <Field name="chatName">
-                {({ field }: any) => (
-                  <Input {...field} />
-                )}
+                {({ field }: any) => <Input {...field} />}
               </Field>
               <ErrorMessage name="chatName" component="div" className="error" />
             </Col>
             <Col xl={12} md={12} style={{ paddingRight: '10px' }}>
               <div style={{ marginBottom: '5px' }}>
-                Horario de Actividad <QuestionCircleOutlined onClick={info} />
+                Horario de Actividad{' '}
+                <QuestionCircleOutlined onClick={infoHora} />
               </div>
               <TimePicker.RangePicker
                 onChange={(e) => {
                   console.log(e);
-
                 }}
               />
               {/* <Field name="activityHours">
@@ -205,29 +232,39 @@ Hable con el usuario en el idioma en el que le habla.
                   <TimePicker.RangePicker {...field}/>
                 )}
               </Field> */}
-              <ErrorMessage name="activityHours" component="div" className="error" />
+              <ErrorMessage
+                name="activityHours"
+                component="div"
+                className="error"
+              />
             </Col>
             <Col xl={12} md={12} style={{ paddingRight: '10px' }}>
               <div style={{ marginBottom: '5px' }}>
-                Descripción del Chatbot <QuestionCircleOutlined onClick={infoDesc} />
+                Descripción del Chatbot{' '}
+                <QuestionCircleOutlined onClick={infoDesc} />
               </div>
               <Field name="chatbotDescription">
-                {({ field }: any) => (
-                  <Input.TextArea {...field} />
-                )}
+                {({ field }: any) => <Input.TextArea {...field} />}
               </Field>
-              <ErrorMessage name="chatbotDescription" component="div" className="error" />
+              <ErrorMessage
+                name="chatbotDescription"
+                component="div"
+                className="error"
+              />
             </Col>
             <Col xl={12} md={12} style={{ paddingRight: '10px' }}>
               <div style={{ marginBottom: '5px' }}>
-                Mensaje de Bienvenida <QuestionCircleOutlined />
+                Mensaje de Bienvenida{' '}
+                <QuestionCircleOutlined onClick={infoBien} />
               </div>
               <Field name="welcomeMessage">
-                {({ field }: any) => (
-                  <Input.TextArea {...field} />
-                )}
+                {({ field }: any) => <Input.TextArea {...field} />}
               </Field>
-              <ErrorMessage name="welcomeMessage" component="div" className="error" />
+              <ErrorMessage
+                name="welcomeMessage"
+                component="div"
+                className="error"
+              />
             </Col>
           </Row>
         </div>
@@ -310,19 +347,20 @@ Hable con el usuario en el idioma en el que le habla.
               <div>Aviso del sistema base (instrucciones personalizadas) *</div>
               <Field name="comportamiento">
                 {({ field }: any) => (
-                  <Input.TextArea
-                    {...field}
-                    autoSize={{ minRows: 10 }}
-                  />
+                  <Input.TextArea {...field} autoSize={{ minRows: 10 }} />
                 )}
               </Field>
 
-              <ErrorMessage name="gptEngine" component="div" className="error" />
+              <ErrorMessage
+                name="gptEngine"
+                component="div"
+                className="error"
+              />
             </Col>
           </Row>
         </div>
       ),
-    }
+    },
   ];
 
   const items = steps.map((item) => ({ key: item.title, title: item.title }));
@@ -336,7 +374,9 @@ Hable con el usuario en el idioma en el que le habla.
       <Formik
         initialValues={initialValues}
         validationSchema={ValidationSchema}
-        onSubmit={(values, { setSubmitting }) => handleSubmit(values, setSubmitting)}
+        onSubmit={(values, { setSubmitting }) =>
+          handleSubmit(values, setSubmitting)
+        }
       >
         {({ isSubmitting }) => (
           <Form>
@@ -368,7 +408,6 @@ Hable con el usuario en el idioma en el que le habla.
         )}
       </Formik>
     </Card>
-
   );
 };
 
