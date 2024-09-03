@@ -32,7 +32,7 @@ const CardPricing: React.FC<CardPricingProps> = ({
 
           } : {
             background:'rgba(34, 242, 255, 0.1)',
-            border:'1px solid #0C5257'
+            border:'1px solid #0C5257',
           }
       }>
         {

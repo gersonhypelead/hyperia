@@ -21,7 +21,7 @@ const TabKnowledgeBase: React.FC = () => {
       <Title style={{ marginTop: '-5px' }} level={4}>Fuentes de Datos</Title>
       <Tabs defaultActiveKey="1" >
         <TabPane tab="Texto" key="1" >
-          <Space direction="vertical" size="large" style={{ width: '100%' }}>
+          <Space direction="vertical" size="large" style={{ width: '100%'}}>
             <Space size="middle">
               <Title level={5} style={{ color: '#aaa', marginTop: '-5px', marginBottom: '-10px' }}>
                 Datos de Texto <InfoCircleFilled style={{ color: '#aaa' }} />

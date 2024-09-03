@@ -84,9 +84,9 @@ const Home: React.FC = () => {
                   height: '130px',
                   backgroundImage: "linear-gradient(137deg, rgba(34, 242, 255, 1) 0%, rgba(0, 255, 194, 1) 100%)",
                   position: 'relative',
-                  borderRadius: '25px',
+                  borderRadius: '50px',
                   boxShadow: '0 4px 8px rgba(12, 12, 12, 0.2)',
-                  paddingLeft: '20px',
+                  paddingLeft: '50px',
                   marginBottom: '20px'
                 }}
               >
@@ -108,7 +108,7 @@ const Home: React.FC = () => {
                       <div
                         style={{
                           position: 'absolute',
-                          bottom: '10px'
+                          bottom: '20px'
                         }}
                       >
                         <div>

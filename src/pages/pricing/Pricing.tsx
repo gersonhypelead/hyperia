@@ -11,7 +11,7 @@ const Pricing: React.FC = () => {
     <>
       <Row
         justify="center"
-        style={{ textAlign: 'center', marginBottom: '50px', marginTop: '-50px' }}
+        style={{ textAlign: 'center', marginBottom: '50px', marginTop: '-50px', background:'#fff', paddingBottom:'40px', borderRadius:'50px', boxShadow:' 0 4px 8px rgba(12, 12, 12, 0.2)' }}
       >
         <Col>
           <h1
