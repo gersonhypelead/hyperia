@@ -15,6 +15,7 @@ import {
 } from '@ant-design/icons';
 import { CreateConversationSupportReducer } from '../../redux/actions/chatBots/Chat/ChatSupport';
 
+
 interface Message {
   id: number;
   text: string;
@@ -36,6 +37,7 @@ interface ChatProps {
 }
 
 const ChatComponent: React.FC<ChatProps> = ({
+
   idConversation = 0,
   editBubble = true,
   modeBot = false,
@@ -52,6 +54,19 @@ const ChatComponent: React.FC<ChatProps> = ({
   const [messages, setMessages] = useState<Message[]>([
 
   ]);
+
+  const {
+    rex_chatsbots
+  } = useSelector(({ home }: any) => home);
+
+  const selectedChatId = Number(localStorage.getItem('chat_seleccionado'));
+
+  const selectedChatbot = rex_chatsbots.find((bot: any) => bot.id === selectedChatId);
+
+  useEffect(() => {
+    console.log('Selected Chatbot Data:', selectedChatbot);
+  }, [selectedChatbot]);
+
   const [newMessage, setNewMessage] = useState<string>('');
   const [sender, setSender] = useState<'emisor' | 'receptor'>('emisor');
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -73,9 +88,41 @@ const ChatComponent: React.FC<ChatProps> = ({
   }, [data]);
 
   const handleSendMessage = async (messageSend: string) => {
-    // console.log("mandando mensaje ---", messageSend)
     if (newMessage.trim()) {
       setNewMessage('');
+
+      const currentHour = new Date();
+
+      // Obtener el rango de horario del chatbot seleccionado
+      const horarioActividad = selectedChatbot?.horarioActividad || '';
+      const [startHour, endHour] = horarioActividad.split(' - ');
+
+      // Convertir las horas a Date objects para comparación
+      const today = new Date();
+      const startDateTime = new Date(today.toDateString() + ' ' + startHour);
+      const endDateTime = new Date(today.toDateString() + ' ' + endHour);
+
+      // Verificar si la hora actual está dentro del rango de horario
+      if (currentHour >= startDateTime && currentHour <= endDateTime) {
+        const messageRecived: Message = {
+          id: messages.length + 1,
+          text: 'Disponible',
+          sender: 'receptor',
+        };
+
+        let conversacion = [...messages, messageRecived];
+        setMessages([...conversacion]);
+      } else {
+        const messageRecived: Message = {
+          id: messages.length + 1,
+          text: 'No disponible',
+          sender: 'receptor',
+        };
+
+        let conversacion = [...messages, messageRecived];
+        setMessages([...conversacion]);
+        return;
+      }
 
       let conversacion = [...messages];
 
@@ -88,8 +135,9 @@ const ChatComponent: React.FC<ChatProps> = ({
       setMessages([...conversacion]);
 
       if (!modeBot) {
-
-        const rpta_bot: any = supportChat ? await dispatch(CreateConversationSupportReducer(messageSend)) : await dispatch(CreateConversationReducer(messageSend))
+        const rpta_bot: any = supportChat
+          ? await dispatch(CreateConversationSupportReducer(messageSend))
+          : await dispatch(CreateConversationReducer(messageSend));
 
         const messageRecived: Message = {
           id: messages.length + 2,
@@ -100,11 +148,12 @@ const ChatComponent: React.FC<ChatProps> = ({
         conversacion.push(messageRecived);
         setMessages([...conversacion]);
       } else {
-        dispatch(CreateMessageTrainReducer(sender, idConversation, messageSend))
+        dispatch(CreateMessageTrainReducer(sender, idConversation, messageSend));
         setSender(sender === 'emisor' ? 'receptor' : 'emisor');
       }
     }
   };
+  
 
   return (
     <>
@@ -159,7 +208,7 @@ const ChatComponent: React.FC<ChatProps> = ({
               }}
             >
               <CheckCircleTwoTone twoToneColor="#52c41a" />
-              <span style={{ marginLeft: '5px' }}>Disponible</span>
+              <span style={{ marginLeft: '5px' }}>Disponible2</span>
             </div>
           </div>
           {
@@ -181,6 +230,7 @@ const ChatComponent: React.FC<ChatProps> = ({
                     }}
                     onClick={() => {
                       localStorage.removeItem('TAB_CHAT_CONVERSACION_ID');
+                      localStorage.removeItem('SUPPORT_CONVERSACION_ID');
                       dispatch(ResetConversationReducer())
                     }}
                   />

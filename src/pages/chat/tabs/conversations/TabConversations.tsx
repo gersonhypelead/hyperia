@@ -3,7 +3,7 @@ import { Card, Col, Row, Skeleton } from 'antd';
 import { DeleteTwoTone } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import ChatComponent from '../../../../components/chat/ChatComponent';
-import { GetDataConversationsReducer } from '../../../../redux/actions/chatBots/conversation/Conversation';
+import { DeleteDataConversationsReducer, GetDataConversationsReducer } from '../../../../redux/actions/chatBots/conversation/Conversation';
 import { RootState } from '../../../../redux/store/store';
 import { AppDispatch } from '../../../../redux/store/store';
 import NoAccess from '../../../../components/pages/chat/NoAccess';
@@ -13,22 +13,26 @@ const TabConversations: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>(); // Usar AppDispatch aquí
   const { rex_conversations, rex_loading, rex_error } = useSelector((state: RootState) => state.conversation);
 
+
   const [chatData, setChatData] = useState<any>(null);
   const [listConversationsData, setListConversationsData] = useState<any[]>([]);
 
   useEffect(() => {
-    console.log("11Conversaciones: -----------------------");
+  /*   console.log("11Conversaciones: -----------------------"); */
+ // console.log(rex_conversations , "???????????????????????????'")
     dispatch(GetDataConversationsReducer());
   }, [localStorage.getItem("chat_seleccionado")]);
 
   useEffect(() => {
-    if (rex_conversations.length > 0) {
+    if (rex_conversations) {
       setChatData(rex_conversations[0]);
       setListConversationsData(rex_conversations);
+      console.log("entro")
     }
   }, [rex_conversations]);
 
   const handleRemove = (index: number) => {
+    dispatch(DeleteDataConversationsReducer(index))
     const newList = listConversationsData.filter((_, i) => i !== index);
     setListConversationsData(newList);
   };

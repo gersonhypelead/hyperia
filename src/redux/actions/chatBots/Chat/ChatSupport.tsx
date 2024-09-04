@@ -29,9 +29,10 @@ export const CreateConversationSupportReducer = (
       return res.json()
     })
       .then(data => {
+        const rpta = data.data[0]
         // console.log(data);
-        localStorage.setItem("SUPPORT_CONVERSACION_ID", data.id)
-        id_conversacion = data.id
+        localStorage.setItem("SUPPORT_CONVERSACION_ID", rpta.id)
+        id_conversacion = rpta.id
 
       }).catch((error) => {
         console.log(error)

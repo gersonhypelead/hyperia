@@ -16,19 +16,21 @@ export const CreateConversationReducer = (
   Action<string>
 > => async (dispatch, getState) => {
 
-  console.log("entrenamiento")
+  console.log("entrenamiento", localStorage.getItem("TAB_CHAT_CONVERSACION_ID"))
 
   let id_conversacion = localStorage.getItem("TAB_CHAT_CONVERSACION_ID");
   if (!id_conversacion) {
+    console.log("entro en el undifendslfnñladjsfk")
     await fetchWithIP('chatbots/' + localStorage.getItem("chat_seleccionado") + '/conversaciones', {
       method: 'POST',
     }).then(async res => {
       return res.json()
     })
       .then(data => {
-        // console.log(data);
-        localStorage.setItem("TAB_CHAT_CONVERSACION_ID", data.id)
-        id_conversacion = data.id
+        const rpta = data.data[0]
+
+        localStorage.setItem("TAB_CHAT_CONVERSACION_ID", rpta.id)
+        id_conversacion = rpta.id
 
       }).catch((error) => {
         console.log(error)
@@ -51,7 +53,6 @@ export const CreateConversationReducer = (
     .then(data => {
       console.log(data);
       mensaje_bot = data;
-      // localStorage.setItem("TAB_CHAT_CONVERSACION_ID", data.id)
     }).catch((error) => {
       console.log(error)
     });

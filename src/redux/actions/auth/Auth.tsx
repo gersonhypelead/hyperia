@@ -35,15 +35,15 @@ export const LoginAuthReducer = (): ThunkAction<
     }, {
       token
     }).then(res => res.json());
-    console.log("data: -------------");
+    /* console.log("data: -------------");
     console.log(data);
     console.log(data.data);
     console.log(data.data[0]);
-    console.log(data.data[0].user);
+    console.log(data.data[0].user); */
     
     const nuevotoken = data.data[0]?.token;
     localStorage.setItem('token', nuevotoken);
-    console.log(nuevotoken ,"-----Nuevo token")
+   /*  console.log(nuevotoken ,"-----Nuevo token") */
 
     dispatch({
       type: GET_DATA_USER_AUTH,

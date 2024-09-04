@@ -190,7 +190,7 @@ const ChatComponent: React.FC = () => {
 
           </div>
         </Col>
-        <p>--MITAD¿</p>
+        
         <Col md={12} xl={12}>
           <Space direction="vertical">
             <Collapse
@@ -199,7 +199,7 @@ const ChatComponent: React.FC = () => {
               items={[
                 {
                   key: '1',
-                  label: 'This panel can only be collapsed by clicking text',
+                  label: 'Thdsais panel can only be collapsed by clicking text',
                   children: <p>{text}</p>,
                 },
               ]}
@@ -210,7 +210,7 @@ const ChatComponent: React.FC = () => {
               items={[
                 {
                   key: '1',
-                  label: 'This panel can only be collapsed by clicking icon',
+                  label: 'This ',
                   children: <p>{text}</p>,
                 },
               ]}

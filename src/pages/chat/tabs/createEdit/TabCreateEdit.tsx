@@ -58,6 +58,7 @@ const TabCreateEdit: React.FC = () => {
 
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
+  const [activityHours, setActivityHours] = useState<string>('');
 
   const initialValues = {
     chatName: '',
@@ -138,28 +139,25 @@ Hable con el usuario en el idioma en el que le habla.
 
   const handleSubmit = async (values: any, setSubmitting: any) => {
     try {
-      console.log("activityHours");
-      console.log(values);
-      values.horarioActividad = "124";
-      
-      await dispatch(submitFormData(values));
-      const response = await dispatch(sendFormDataToEndpoint(values));
+      const formData = { ...values, activityHours };
+      await dispatch(submitFormData(formData));
+      const response = await dispatch(sendFormDataToEndpoint(formData));
 
-      if (response) {
+      if(response){
         notification.success({
           message: 'Éxito',
           description: 'Los datos se han enviado correctamente.',
           placement: 'topRight',
         });
         navigate('/home');
-      } else {
+      }else {
         notification.error({
           message: 'Error',
           description: 'Lo sentimos no pudimos crear el bot correctamente.',
           placement: 'topRight',
         });
       }
-
+      
 
     } catch (error) {
       console.error('Error al enviar los datos:', error);
@@ -170,6 +168,18 @@ Hable con el usuario en el idioma en el que le habla.
       });
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleTimeChange = (values: any) => {
+    if (values && values.length === 2) {
+      const [start, end] = values;
+      const formattedStart = start.format('HH:mm:ss');
+      const formattedEnd = end.format('HH:mm:ss');
+      setActivityHours(`${formattedStart} - ${formattedEnd}`);
+      
+    } else {
+      setActivityHours('');
     }
   };
 
@@ -194,17 +204,7 @@ Hable con el usuario en el idioma en el que le habla.
               <div style={{ marginBottom: '5px' }}>
                 Horario de Actividad <QuestionCircleOutlined onClick={info} />
               </div>
-              <TimePicker.RangePicker
-                onChange={(e) => {
-                  console.log(e);
-
-                }}
-              />
-              {/* <Field name="activityHours">
-                {({ field }: any) => (
-                  <TimePicker.RangePicker {...field}/>
-                )}
-              </Field> */}
+              <TimePicker.RangePicker onChange={handleTimeChange} format="HH:mm:ss" />
               <ErrorMessage name="activityHours" component="div" className="error" />
             </Col>
             <Col xl={12} md={12} style={{ paddingRight: '10px' }}>

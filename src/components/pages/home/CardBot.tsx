@@ -4,14 +4,20 @@ import { Card, Button, Modal, Dropdown, Menu, Row, Col, Skeleton } from 'antd';
 import { MoreOutlined } from '@ant-design/icons';
 import AvatarRobot from '../../../assets/img/avatars/robot.avif';
 import {
+  GetaverAgeConversationsMessagesByUserAndChatHomeReducer,
+  GetCountConversationsByUserAndChatHomeReducer,
+  GetCountMessagesByUserAndChatHomeReducer,
   GetDataChatsBotsHomeReducer,
-  SelectBotReducer
+  SelectBotReducer,
+  deleteChatbotReducer,
+  duplicateChatbotReducer
 } from '../../../redux/actions/home/Home';
 import { AppDispatch } from '../../../redux/store/store';
 import '../../../styles/pages/home/Home.css';
 import { ResetConversationReducer } from '../../../redux/actions/chatBots/Chat/Chat';
 
 const { Meta } = Card;
+const { confirm } = Modal;
 
 const CardBot: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -19,13 +25,17 @@ const CardBot: React.FC = () => {
   const [chatbot_seleccionado, setChatbot_seleccionado] = useState("");
 
   useEffect(() => {
+    
     dispatch(GetDataChatsBotsHomeReducer());
   }, []);
 
   const {
     rex_chatsbots,
     rex_loading,
-    rex_error
+    rex_error,
+    rex_count_conversations,
+    rex_count_messages , 
+    rex_average
   } = useSelector(({ home }: any) => home);
 
   const showModal = () => {
@@ -40,18 +50,32 @@ const CardBot: React.FC = () => {
     setIsModalVisible(false);
   };
 
-  const handleMenuClick = ({ key }: { key: string }) => {
+  const handleMenuClick = (chatbot: any) => ({ key }: { key: string }) => {
     if (key === 'editar') {
       console.log('Editar');
     } else if (key === 'duplicar') {
-      console.log('Duplicar');
+      const usuarioId = parseInt(localStorage.getItem('id_usuario') || '0', 10);
+      dispatch(duplicateChatbotReducer(usuarioId, chatbot.id));
+      console.log('IDS:', usuarioId, chatbot.id);
     } else if (key === 'eliminar') {
-      console.log('Eliminar');
+      confirm({
+        title: '¿Estás seguro de eliminar este chatbot?',
+        content: 'Una vez eliminado, no podrás recuperar este chatbot.',
+        okText: 'Sí',
+        okType: 'danger',
+        cancelText: 'No',
+        onOk() {
+          dispatch(deleteChatbotReducer(chatbot.id));
+        },
+        onCancel() {
+          console.log('Cancelado');
+        },
+      });
     }
   };
 
-  const menu = (
-    <Menu onClick={handleMenuClick}>
+  const menu = (chatbot: any) => (
+    <Menu onClick={handleMenuClick(chatbot)}>
       <Menu.Item key="editar">Editar</Menu.Item>
       <Menu.Item key="duplicar">Duplicar</Menu.Item>
       <Menu.Item key="eliminar">Eliminar</Menu.Item>
@@ -98,9 +122,14 @@ const CardBot: React.FC = () => {
                     setChatbot_seleccionado(chatbot.id);
                     dispatch(SelectBotReducer(index, !chatbot.select));
                     dispatch(ResetConversationReducer());
-                    if(chatbot.conversacionId){
+                    if (chatbot.id) {
+                      dispatch(GetCountMessagesByUserAndChatHomeReducer(chatbot.id));
+                      dispatch(GetCountConversationsByUserAndChatHomeReducer(chatbot.id));
+                      dispatch(GetaverAgeConversationsMessagesByUserAndChatHomeReducer(chatbot.id))
+                    }
+                    if (chatbot.conversacionId) {
                       localStorage.setItem("TAB_CHAT_CONVERSACION_ID", chatbot.conversacionId);
-                    }else {
+                    } else {
                       localStorage.removeItem("TAB_CHAT_CONVERSACION_ID");
                     }
                   }}
@@ -119,7 +148,7 @@ const CardBot: React.FC = () => {
                       <span>{chatbot.nombre || "Nombre no disponible"}</span>
                     </div>
                     <Dropdown
-                      overlay={menu}
+                      overlay={menu(chatbot)}
                       trigger={['click']}
                     >
                       <MoreOutlined style={{ fontSize: '24px', cursor: 'pointer' }} />

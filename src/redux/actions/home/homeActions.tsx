@@ -16,10 +16,10 @@ export const sendFormDataToEndpoint = (formData: any) => {
         nombre: formData.chatName,
         descripcion: formData.chatbotDescription,
         mensajeInicial: formData.welcomeMessage,
+        horarioActividad: formData.activityHours,
         retrasoRespuesta: parseInt(formData.retrasoRespuesta, 10),
         animacionEscribir: formData.typingAnimation,
         comportamiento: formData.comportamiento,
-        horarioActividad: formData.horarioActividad,
       }
 
       const id_usuario = localStorage.getItem('id_usuario');

@@ -160,7 +160,7 @@ const TabChat: React.FC = () => {
                     items={[
                       {
                         key: '1',
-                        label: 'This panel can only be collapsed by clicking icon',
+                        label: 'ol',
                         children: <p>{text}</p>,
                       },
                     ]}

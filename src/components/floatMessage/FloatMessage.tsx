@@ -75,7 +75,7 @@ const FloatMessage = () => {
           <ChatComponent
             nombreChat='Soporte Vezzos'
             editBubble={false}
-            resetChat={false}
+            resetChat={true}
             supportChat={true}
             data={rex_conversation_support_chat}
           />

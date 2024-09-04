@@ -1,19 +1,36 @@
-import { Col, Row, Button, Divider } from 'antd';
-import React from 'react';
+import { Col, Row, Button  , Divider} from 'antd';
+import React, { useEffect } from 'react';
 import CardBot from '../../components/pages/home/CardBot';
 import CardTokens from '../../components/pages/home/CardTokens';
 import ChartDonut from '../../components/pages/home/ChartDonut';
 import { PlusOutlined, IdcardTwoTone, MessageTwoTone } from '@ant-design/icons';
 import Bot01 from '../../assets/img/bots/bo01.webp';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { AppDispatch } from '../../redux/store/store';
+import { GetaverAgeConversationsMessagesHomeReducer, GetCountConversacionesHomeReducer, GetCountMessagesHomeReducer } from '../../redux/actions/home/Home';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
-
+  const dispatch = useDispatch<AppDispatch>();
   const {
     rex_user_auth
   } = useSelector(({ auth }: any) => auth);
+
+  useEffect(() => {
+    dispatch(GetCountConversacionesHomeReducer());
+    dispatch(GetCountMessagesHomeReducer());
+    dispatch(GetaverAgeConversationsMessagesHomeReducer());
+  }, []);
+
+
+  const {
+    rex_count_conversations , 
+    rex_count_messages,
+    rex_average
+    /* rex_count_conversations_by_user_chat,
+    rex_count_messages_by_user_chat */
+  } = useSelector(({home}:any)=> home)
 
   const donutChartData = [
     { name: 'N° Mensajes E/R', value: 11 },
@@ -57,7 +74,7 @@ const Home: React.FC = () => {
             <Col xl={5} md={12}>
               <CardTokens
                 title="Nº CONVERSACIONES"
-                value={102}
+                value={rex_count_conversations.data?.[0]?.count}
                 tokens={3890}
                 icon={<IdcardTwoTone />}
               />
@@ -65,7 +82,7 @@ const Home: React.FC = () => {
             <Col xl={5} md={12}>
               <CardTokens
                 title="Nº MENSAJES E/R"
-                value={2577}
+                value={rex_count_messages.data?.[0]?.count}
                 tokens={3890}
                 icon={<MessageTwoTone />}
               />
@@ -73,7 +90,7 @@ const Home: React.FC = () => {
             <Col xl={5} md={12}>
               <CardTokens
                 title="MSJ/S E/R POR CONVERSACIÓN"
-                value={13}
+                value={rex_average.data?.[0]?.average}
                 tokens={44}
               />
             </Col>
