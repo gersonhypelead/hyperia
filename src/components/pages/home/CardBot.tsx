@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Card, Button, Modal, Dropdown, Menu, Row, Col, Skeleton } from 'antd';
+import {
+  Card, Button, Modal, Dropdown,
+  Menu, Row, Col, Skeleton
+} from 'antd';
 import { MoreOutlined } from '@ant-design/icons';
 import AvatarRobot from '../../../assets/img/avatars/robot.avif';
 import {
@@ -15,17 +18,19 @@ import {
 import { AppDispatch } from '../../../redux/store/store';
 import '../../../styles/pages/home/Home.css';
 import { ResetConversationReducer } from '../../../redux/actions/chatBots/Chat/Chat';
+import { useNavigate } from 'react-router-dom';
 
 const { Meta } = Card;
 const { confirm } = Modal;
 
 const CardBot: React.FC = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [chatbot_seleccionado, setChatbot_seleccionado] = useState("");
 
   useEffect(() => {
-    
+
     dispatch(GetDataChatsBotsHomeReducer());
   }, []);
 
@@ -34,7 +39,7 @@ const CardBot: React.FC = () => {
     rex_loading,
     rex_error,
     rex_count_conversations,
-    rex_count_messages , 
+    rex_count_messages,
     rex_average
   } = useSelector(({ home }: any) => home);
 
@@ -53,10 +58,23 @@ const CardBot: React.FC = () => {
   const handleMenuClick = (chatbot: any) => ({ key }: { key: string }) => {
     if (key === 'editar') {
       console.log('Editar');
+      navigate('/chats');
     } else if (key === 'duplicar') {
-      const usuarioId = parseInt(localStorage.getItem('id_usuario') || '0', 10);
-      dispatch(duplicateChatbotReducer(usuarioId, chatbot.id));
-      console.log('IDS:', usuarioId, chatbot.id);
+
+      confirm({
+        title: '¿Estás seguro de duplicar este bot?',
+        content: 'Esta opción duplicara todo el entrenamiento que se le haya realizado al bot',
+        okText: 'Sí',
+        okType: 'danger',
+        cancelText: 'No',
+        onOk() {
+          const usuarioId = parseInt(localStorage.getItem('id_usuario') || '0', 10);
+          dispatch(duplicateChatbotReducer(usuarioId, chatbot.id));
+        },
+        onCancel() {
+          console.log('Cancelado');
+        },
+      });
     } else if (key === 'eliminar') {
       confirm({
         title: '¿Estás seguro de eliminar este chatbot?',

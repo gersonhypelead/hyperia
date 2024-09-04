@@ -64,7 +64,7 @@ const ChatComponent: React.FC<ChatProps> = ({
   const selectedChatbot = rex_chatsbots.find((bot: any) => bot.id === selectedChatId);
 
   useEffect(() => {
-    console.log('Selected Chatbot Data:', selectedChatbot);
+    // console.log('Selected Chatbot Data:', selectedChatbot);
   }, [selectedChatbot]);
 
   const [newMessage, setNewMessage] = useState<string>('');
@@ -153,7 +153,7 @@ const ChatComponent: React.FC<ChatProps> = ({
       }
     }
   };
-  
+
 
   return (
     <>
@@ -165,7 +165,7 @@ const ChatComponent: React.FC<ChatProps> = ({
           borderRadius: '25px',
           position: 'relative',
           border: '1px solid #C4C4C4',
-          boxShadow:' 0 0px 8px rgba(12, 12, 12, 0.2)'
+          boxShadow: ' 0 0px 8px rgba(12, 12, 12, 0.2)'
         }}
       >
         {/* HEAD */}
@@ -198,7 +198,7 @@ const ChatComponent: React.FC<ChatProps> = ({
             }}
           >
             <div
-              style={{ fontWeight: 'bold', fontSize: '18px', lineHeight: '1', background: 'transparent', color:' #0C5257' }}
+              style={{ fontWeight: 'bold', fontSize: '18px', lineHeight: '1', background: 'transparent', color: ' #0C5257' }}
             >
               {nombreChat}
             </div>
@@ -206,7 +206,7 @@ const ChatComponent: React.FC<ChatProps> = ({
               style={{
                 background: 'transparent',
                 marginTop: '4px',
-                color:' #0C5257'
+                color: ' #0C5257'
               }}
             >
               <CheckCircleTwoTone twoToneColor="#52c41a" />
@@ -220,7 +220,7 @@ const ChatComponent: React.FC<ChatProps> = ({
                   position: "absolute",
                   right: "20px",
                   background: 'transparent',
-                  color:' #0C5257'
+                  color: ' #0C5257'
                 }}
               >
                 <Tooltip
@@ -322,6 +322,11 @@ const ChatComponent: React.FC<ChatProps> = ({
             value={newMessage}
             onChange={(e) => { setNewMessage(e.target.value); console.log(e.target.value, "valor --") }}
             placeholder={inputPlaceholder}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') {
+                handleSendMessage(newMessage)
+              }
+            }}
             suffix={
               <div
                 style={{

@@ -6,6 +6,7 @@ import {
 } from '../../../../constantes/chatBots/chat/Chat';
 import config from '../../../../config';
 import fetchWithIP from '../../utils/fetchHeaders';
+import { BOT_SELECTED, GET_DATA_CHATSBOTS_HOME } from '../../../../constantes/Home/Home';
 
 export const CreateConversationReducer = (
   mensaje: string
@@ -58,31 +59,6 @@ export const CreateConversationReducer = (
     });
 
   return mensaje_bot;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // const bots: any = getState().home.rex_chatsbots;
-  // bots[index]['select'] = true;
-
-  //   dispatch({
-  //     type: GET_DATA_CHATSBOTS_HOME,
-  //     payload: bots
-  //   });
 }
 
 export const CreateMessageTrainReducer = (
@@ -103,7 +79,7 @@ export const CreateMessageTrainReducer = (
     sender = "LLM";
   }
 
-  const bodu = [
+  const body = [
     {
       "emisor": sender,
       "contenido": mensaje
@@ -115,9 +91,7 @@ export const CreateMessageTrainReducer = (
       method: 'POST',
 
     },
-    bodu
-
-
+    body
   )
     .then(async res => {
       return res.json()
@@ -127,8 +101,6 @@ export const CreateMessageTrainReducer = (
     }).catch((error) => {
       console.log(error)
     });
-
-
 
 }
 
@@ -194,4 +166,32 @@ export const ResetConversationReducer = (
     type: GET_CONVERSATION_TAB_CHAT,
     payload: []
   })
+}
+
+export const ResetBotSelectedReducer = (
+
+): ThunkAction<
+  Promise<void>,
+  RootState,
+  unknown,
+  Action<string>
+> => async (dispatch, getState) => {
+
+  const bots: any = getState().home.rex_chatsbots;
+  const updatedArray = bots.map((item: any) => ({
+    ...item,
+    selected: false
+  }));
+  localStorage.removeItem('chat_seleccionado');
+
+  dispatch({
+    type: GET_DATA_CHATSBOTS_HOME,
+    payload: updatedArray
+  });
+
+  dispatch({
+    type: BOT_SELECTED,
+    payload: null
+  })
+
 }

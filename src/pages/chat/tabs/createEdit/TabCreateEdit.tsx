@@ -12,13 +12,18 @@ import {
   Card,
   Switch,
   TimePicker,
+  Skeleton,
 } from 'antd';
-import { QuestionCircleOutlined } from '@ant-design/icons';
+import {
+  QuestionCircleOutlined,
+  PlusOutlined
+} from '@ant-design/icons';
 import type { SelectProps } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   GetDataChatsBotsHomeReducer,
+  SelectBotReducer,
   UpdateVarMundoReducer,
 } from '../../../../redux/actions/home/Home';
 import { AppDispatch, RootState } from '../../../../redux/store/store';
@@ -27,9 +32,10 @@ import {
   sendFormDataToEndpoint,
 } from '../../../../redux/actions/home/homeActions';
 import { notification } from 'antd';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form, Field, ErrorMessage, useFormikContext } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
+import { GetConversationReducer, ResetBotSelectedReducer, ResetConversationReducer } from '../../../../redux/actions/chatBots/Chat/Chat';
 
 type LabelRender = SelectProps['labelRender'];
 
@@ -62,59 +68,64 @@ const TabCreateEdit: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { rex_chatsbots, rex_mundo } = useSelector(({ home }: any) => home);
+  const {
+    rex_chatsbots,
+    rex_chatbot_seleccionado
+  } = useSelector(({ home }: any) => home);
 
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
   const [activityHours, setActivityHours] = useState<string>('');
-
-  const initialValues = {
-    chatName: '',
-    activityHours: '',
-    chatbotDescription: '',
-    welcomeMessage: '',
-    responseTime: '',
-    typingAnimation: true,
-    missionBot: '',
-    visionBot: '',
-    missionCompany: '',
-    visionCompany: '',
-    benefits: '',
-    targetAudience: '',
-    gptEngine: '1',
-    retrasoRespuesta: 0,
-    comportamiento: `Aviso del sistema base (instrucciones personalizadas) *
-
-// Este es un comentario interno y la Inteligencia Artificial que alimenta los Chatbots no la tendrá en cuenta.
-
-// Puedes reemplazar el siguiente contenido con la información de tu propio negocio, empresa o proyecto.
-
-// Te recomendamos explorar el mercado e investigar a tus competidores para encontrar Chatbots que incluyan indicaciones que te sirvan de referencia para crear el tuyo propio.
-
-// RECUERDA: crea tus indicaciones de manera individual, es decir, un cambio cada vez. Realiza el cambio que necesites, pruébalo y si toda funciona como quieres, aplica un nuevo cambio.
-
-// Sustituye la información entre 0 con tu propia información:
-
-Eres es un Chatbot para (INTRODUCE_ NOMBRE_NEGOCIO) y tu nombre es (INTRODUCE NOMBRE CHATBOT) .
-
-Tu trabajo es responder las preguntas que envían los clientes. Para ello, se te han dado instrucciones sobre cómo acceder a la base de conocimientos.
-
-Si no tienes la respuesta a una pregunta y está en la base de conocimientos, comunica al usuario que no tienes respuesta a su pregunta. Puedes decir algo como: "Hum, no estoy seguro".
-
-Mantén tus respuestas lo más concisas posibles sin dejar de facilitar la información solicitada.
-
-No interrumpas el carácter.
-
-Evita responder preguntas que no sean relevantes para el negocio.
-
-// Programación de citas basada en enlaces (elimina el comentario de la línea siguiente si es necesario).
-
-// Si un usuario desea programar una reunión o reservar una cita, envíalo a este enlace: (YOUR_CALENDLY LINK)
-
-// Los mensajes deben estar escritos en inglés y luego puede solicitarle al Chatbot que los traduzca (si es necesario para tu caso de uso).
-
-// Este ejemplo maneja todos los idiomas:`,
-  };
+  const [initialValues, setInitialValues] = useState<any>(
+    {
+      chatName: rex_chatbot_seleccionado?.nombre,
+      activityHours: rex_chatbot_seleccionado?.horarioActividad,
+      chatbotDescription: rex_chatbot_seleccionado?.descripcion,
+      welcomeMessage: rex_chatbot_seleccionado?.mensajeInicial,
+      responseTime: '',
+      typingAnimation: true,
+      missionBot: '',
+      visionBot: '',
+      missionCompany: '',
+      visionCompany: '',
+      benefits: '',
+      targetAudience: '',
+      gptEngine: '1',
+      retrasoRespuesta: 0,
+      comportamiento: rex_chatbot_seleccionado?.comportamiento || `Aviso del sistema base (instrucciones personalizadas) *
+  
+  // Este es un comentario interno y la Inteligencia Artificial que alimenta los Chatbots no la tendrá en cuenta.
+  
+  // Puedes reemplazar el siguiente contenido con la información de tu propio negocio, empresa o proyecto.
+  
+  // Te recomendamos explorar el mercado e investigar a tus competidores para encontrar Chatbots que incluyan indicaciones que te sirvan de referencia para crear el tuyo propio.
+  
+  // RECUERDA: crea tus indicaciones de manera individual, es decir, un cambio cada vez. Realiza el cambio que necesites, pruébalo y si toda funciona como quieres, aplica un nuevo cambio.
+  
+  // Sustituye la información entre 0 con tu propia información:
+  
+  Eres es un Chatbot para (INTRODUCE_ NOMBRE_NEGOCIO) y tu nombre es (INTRODUCE NOMBRE CHATBOT) .
+  
+  Tu trabajo es responder las preguntas que envían los clientes. Para ello, se te han dado instrucciones sobre cómo acceder a la base de conocimientos.
+  
+  Si no tienes la respuesta a una pregunta y está en la base de conocimientos, comunica al usuario que no tienes respuesta a su pregunta. Puedes decir algo como: "Hum, no estoy seguro".
+  
+  Mantén tus respuestas lo más concisas posibles sin dejar de facilitar la información solicitada.
+  
+  No interrumpas el carácter.
+  
+  Evita responder preguntas que no sean relevantes para el negocio.
+  
+  // Programación de citas basada en enlaces (elimina el comentario de la línea siguiente si es necesario).
+  
+  // Si un usuario desea programar una reunión o reservar una cita, envíalo a este enlace: (YOUR_CALENDLY LINK)
+  
+  // Los mensajes deben estar escritos en inglés y luego puede solicitarle al Chatbot que los traduzca (si es necesario para tu caso de uso).
+  
+  // Este ejemplo maneja todos los idiomas:`,
+    }
+  );
+  const [showForm, setShowForm] = useState(true);
 
   const next = () => {
     setCurrent(current + 1);
@@ -133,7 +144,7 @@ Evita responder preguntas que no sean relevantes para el negocio.
           facilidad.
         </div>
       ),
-      onOk() {},
+      onOk() { },
     });
   };
 
@@ -141,7 +152,7 @@ Evita responder preguntas que no sean relevantes para el negocio.
     Modal.info({
       title: 'Horario de Actividad',
       content: <div>Configurar las horas de actividad del chatbox.</div>,
-      onOk() {},
+      onOk() { },
     });
   };
 
@@ -151,7 +162,7 @@ Evita responder preguntas que no sean relevantes para el negocio.
       content: (
         <div>Describe brevemente el objetivo y las funciones del chatbox.</div>
       ),
-      onOk() {},
+      onOk() { },
     });
   };
 
@@ -164,31 +175,31 @@ Evita responder preguntas que no sean relevantes para el negocio.
           chatbox por primera vez.
         </div>
       ),
-      onOk() {},
+      onOk() { },
     });
   };
 
-  const handleSubmit = async (values: any, setSubmitting: any) => {
+  const handleSubmit = async (values: any, setSubmitting: any, resetForm: any) => {
     try {
       const formData = { ...values, activityHours };
       await dispatch(submitFormData(formData));
       const response = await dispatch(sendFormDataToEndpoint(formData));
 
-      if(response){
+      if (response) {
         notification.success({
           message: 'Éxito',
           description: 'Los datos se han enviado correctamente.',
           placement: 'topRight',
         });
         navigate('/home');
-      }else {
+      } else {
         notification.error({
           message: 'Error',
           description: 'Lo sentimos no pudimos crear el bot correctamente.',
           placement: 'topRight',
         });
       }
-      
+
 
     } catch (error) {
       console.error('Error al enviar los datos:', error);
@@ -208,7 +219,7 @@ Evita responder preguntas que no sean relevantes para el negocio.
       const formattedStart = start.format('HH:mm:ss');
       const formattedEnd = end.format('HH:mm:ss');
       setActivityHours(`${formattedStart} - ${formattedEnd}`);
-      
+
     } else {
       setActivityHours('');
     }
@@ -368,19 +379,142 @@ Evita responder preguntas que no sean relevantes para el negocio.
     marginTop: 16,
   };
 
+  const options = rex_chatsbots?.map((chatbot: any) => ({
+    label: chatbot.nombre,
+    value: chatbot.nombre
+  }));
+
+  const GetConversation = async () => {
+    await dispatch(GetConversationReducer());
+  }
+
   return (
     <Card>
+      {/* <ExternalResetButton /> */}
       <Formik
         initialValues={initialValues}
         validationSchema={ValidationSchema}
-        onSubmit={(values, { setSubmitting }) =>
-          handleSubmit(values, setSubmitting)
+        onSubmit={(values, { resetForm, setSubmitting }) =>
+          handleSubmit(values, setSubmitting, resetForm)
         }
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, resetForm }) => (
           <Form>
-            <Steps current={current} items={items} />
-            <div style={contentStyle}>{steps[current].content}</div>
+            <Row style={{ marginBottom: '35px' }}>
+              <Col xxl={12} xl={12} md={12}>
+                {
+                  showForm ? (
+                    <Select
+                      labelRender={labelRender}
+                      // defaultValue={options?.length > 0 ? options[0].value : ""} // Asegúrate de que haya una opción predeterminada
+                      defaultValue={
+                        options?.length > 0
+                          ? localStorage.getItem('chat_seleccionado')
+                            ? rex_chatsbots.find((option: any) => option.id == localStorage.getItem('chat_seleccionado')).nombre
+                            : ""
+                          : ""
+                      } // Asegúrate de que haya una opción predeterminada
+                      style={{ width: '200px' }}
+                      options={options}
+                      onChange={(value) => {
+                        rex_chatsbots.map((chatbot: any, index: number) => {
+                          if (chatbot.nombre === value) {
+                            setShowForm(false)
+                            setTimeout(() => setShowForm(true), 1000)
+                            resetForm({
+                              values: {
+                                chatName: chatbot.nombre,
+                                activityHours: chatbot?.horarioActividad,
+                                chatbotDescription: chatbot?.descripcion,
+                                welcomeMessage: chatbot?.mensajeInicial,
+                                comportamiento: chatbot?.comportamiento
+                              }
+                            })
+                            localStorage.setItem("chat_seleccionado", chatbot.id)
+                            dispatch(SelectBotReducer(index, !chatbot.select))
+                            if (chatbot.conversacionId) {
+                              localStorage.setItem("TAB_CHAT_CONVERSACION_ID", chatbot.conversacionId);
+                              GetConversation()
+                            } else {
+                              localStorage.removeItem("TAB_CHAT_CONVERSACION_ID");
+                              dispatch(ResetConversationReducer());
+                            }
+                          }
+                        });
+                      }}
+                    />
+                  ) : null
+                }
+              </Col>
+              <Col
+                xxl={12} xl={12} md={12}
+                style={{
+                  display: "flex",
+                  justifyContent: "right"
+                }}
+              >
+                {
+                  rex_chatbot_seleccionado ? (
+                    <Button
+                      type="primary" icon={<PlusOutlined />}
+                      style={{ display: 'flex', alignItems: 'center' }}
+                      onClick={() => {
+                        setShowForm(false)
+                        dispatch(ResetBotSelectedReducer());
+                        setTimeout(() => setShowForm(true), 1000)
+                        resetForm({
+                          values: {
+                            chatName: '',
+                            comportamiento: `Aviso del sistema base (instrucciones personalizadas) *
+  
+  // Este es un comentario interno y la Inteligencia Artificial que alimenta los Chatbots no la tendrá en cuenta.
+  
+  // Puedes reemplazar el siguiente contenido con la información de tu propio negocio, empresa o proyecto.
+  
+  // Te recomendamos explorar el mercado e investigar a tus competidores para encontrar Chatbots que incluyan indicaciones que te sirvan de referencia para crear el tuyo propio.
+  
+  // RECUERDA: crea tus indicaciones de manera individual, es decir, un cambio cada vez. Realiza el cambio que necesites, pruébalo y si toda funciona como quieres, aplica un nuevo cambio.
+  
+  // Sustituye la información entre 0 con tu propia información:
+  
+  Eres es un Chatbot para (INTRODUCE_ NOMBRE_NEGOCIO) y tu nombre es (INTRODUCE NOMBRE CHATBOT) .
+  
+  Tu trabajo es responder las preguntas que envían los clientes. Para ello, se te han dado instrucciones sobre cómo acceder a la base de conocimientos.
+  
+  Si no tienes la respuesta a una pregunta y está en la base de conocimientos, comunica al usuario que no tienes respuesta a su pregunta. Puedes decir algo como: "Hum, no estoy seguro".
+  
+  Mantén tus respuestas lo más concisas posibles sin dejar de facilitar la información solicitada.
+  
+  No interrumpas el carácter.
+  
+  Evita responder preguntas que no sean relevantes para el negocio.
+  
+  // Programación de citas basada en enlaces (elimina el comentario de la línea siguiente si es necesario).
+  
+  // Si un usuario desea programar una reunión o reservar una cita, envíalo a este enlace: (YOUR_CALENDLY LINK)
+  
+  // Los mensajes deben estar escritos en inglés y luego puede solicitarle al Chatbot que los traduzca (si es necesario para tu caso de uso).
+  
+  // Este ejemplo maneja todos los idiomas:`
+                          }
+                        });
+
+                      }}
+                    >
+                      Crear un nuevo chatbot
+                    </Button>
+                  ) : null
+                }
+              </Col>
+            </Row>
+            {
+              showForm ? (
+                <>
+                  <Steps current={current} items={items} />
+                  <div style={contentStyle}>{steps[current].content}</div>
+                </>
+              ) : <Skeleton active />
+            }
             <Divider />
             <div style={{ marginTop: 24 }}>
               {current < steps.length - 1 && (
@@ -406,8 +540,18 @@ Evita responder preguntas que no sean relevantes para el negocio.
           </Form>
         )}
       </Formik>
-    </Card>
+    </Card >
   );
 };
+
+// const ExternalResetButton = () => {
+//   const { resetForm } = useFormikContext();
+
+//   return (
+//     <button type="button" onClick={resetForm}>
+//       Reset Form
+//     </button>
+//   );
+// };
 
 export default TabCreateEdit;

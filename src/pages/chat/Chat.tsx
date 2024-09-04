@@ -60,7 +60,8 @@ const Chat: React.FC = () => {
   return (
     <Tabs
       defaultActiveKey={
-        localStorage.getItem("chat_seleccionado") ? "1" : "2"
+        // localStorage.getItem("chat_seleccionado") ? "1" : "2"
+        "2"
       }
       items={listTabs.map((Tab, i) => {
         const id = String(i + 1);

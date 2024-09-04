@@ -11,10 +11,10 @@ import Register from '../pages/register/Register';
 import ProtectedRoute from './ProtectedRoute';
 import GoogleCallback from './../auth/googleCallback'
 import Users from '../pages/admin/users/Users';
-import UserProfile from '../components/pages/user/PerfilUser';
 import TypeUsersChat from '../pages/admin/typesUsers/TypesUsers';
 import PermisosPage from '../components/pages/admin/typeUsers/PermissionsTypeUser';
-
+import Profile from '../pages/user/Profile';
+import MySubscription from '../pages/user/MySubscription';
 
 const AppRoutes: React.FC = () => {
   return (
@@ -31,7 +31,8 @@ const AppRoutes: React.FC = () => {
             <Route path="/usuarios" element={<Users />} />
             <Route path="/tipos-usuarios" element={<TypeUsersChat />} />
             <Route path="/tipos-usuarios/:tipoUsuarioId/permisos" element={<PermisosPage />} />
-            <Route path="/profile" element={<UserProfile />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/settings" element={<MySubscription />} />
             <Route path="*" element={<Chat />} />
             <Route path="*" element={<Home />} />
           

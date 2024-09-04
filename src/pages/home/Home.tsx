@@ -94,7 +94,9 @@ const Home: React.FC = () => {
                 tokens={44}
               />
             </Col>
-            <Col xl={5} md={12} className='cardTokens'>
+            <Col 
+              xl={5} md={12} className='cardTokens'
+            >
               <div
                 style={{
                   width: '100%',
@@ -104,7 +106,11 @@ const Home: React.FC = () => {
                   borderRadius: '50px',
                   boxShadow: '0 4px 8px rgba(12, 12, 12, 0.2)',
                   paddingLeft: '50px',
-                  marginBottom: '20px'
+                  marginBottom: '20px',
+                  cursor: 'pointer'
+                }}
+                onClick={() => {
+                  navigate('/settings');
                 }}
               >
                 <Row>

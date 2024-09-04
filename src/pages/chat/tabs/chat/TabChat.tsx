@@ -4,7 +4,10 @@ import ChatComponent from '../../../../components/chat/ChatComponent';
 import NoAccess from '../../../../components/pages/chat/NoAccess';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../../../redux/store/store';
-import { GetConversationReducer, ResetConversationReducer } from '../../../../redux/actions/chatBots/Chat/Chat';
+import { 
+  GetConversationReducer, 
+  ResetConversationReducer
+} from '../../../../redux/actions/chatBots/Chat/Chat';
 import type { SelectProps } from 'antd';
 import { GetDataChatsBotsHomeReducer, SelectBotReducer } from '../../../../redux/actions/home/Home';
 

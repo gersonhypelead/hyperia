@@ -9,24 +9,43 @@ import {
   GET_COUNT_CONVERSATIONS_BY_USER_CHAT,
   DELETE_CHATBOT_REQUEST,
   DELETE_CHATBOT_SUCCESS,
-  DELETE_CHATBOT_FAILURE
+  DELETE_CHATBOT_FAILURE,
+  BOT_SELECTED
 } from '../../../constantes/Home/Home';
 import config from '../../../config';
 import fetchWithIP from '../utils/fetchHeaders';
 
 // Acción asíncrona para obtener los datos de los chatbots
-export const GetDataChatsBotsHomeReducer = (): AppThunk => async (dispatch) => {
+export const GetDataChatsBotsHomeReducer = (): AppThunk => async (dispatch, getState) => {
+  const rex_chatsbots: any = getState().home.rex_chatsbots;
+
   dispatch({ type: 'FETCH_CHATBOT_REQUEST' });
 
   try {
     const id_usuario = localStorage.getItem('id_usuario');
-    const data = await fetchWithIP(`usuarios/${id_usuario}/chatbots`, 
+    const data = await fetchWithIP(`usuarios/${id_usuario}/chatbots`,
       { method: 'GET' }).then(response => response.json());
 
     dispatch({
       type: 'FETCH_CHATBOT_SUCCESS',
       payload: data,
     });
+
+    const id_chat_selected = localStorage.getItem('chat_seleccionado');
+    if (id_chat_selected) {
+      console.log("CHAT SELECCIONADO: -------------------");
+      console.log(id_chat_selected);
+      
+      const bot_selected = data.find((option: any) => option.id == parseInt(id_chat_selected.toString()))
+      console.log("bot_selected: --------------------------");
+      console.log(bot_selected);
+      
+      dispatch({
+        type: BOT_SELECTED,
+        payload: bot_selected
+      })
+    }
+
   } catch (error) {
     console.error('Error al cargar los chatbots', error);
     dispatch({
@@ -71,6 +90,11 @@ export const SelectBotReducer = (index: number, select: boolean = true): ThunkAc
     type: GET_DATA_CHATSBOTS_HOME,
     payload: bots
   });
+
+  dispatch({
+    type: BOT_SELECTED,
+    payload: bots[index]
+  })
 }
 
 export const GetCountConversacionesHomeReducer = (): ThunkAction<
@@ -81,9 +105,9 @@ export const GetCountConversacionesHomeReducer = (): ThunkAction<
 > => async (dispatch) => {
   try {
     const id_usuario = localStorage.getItem('id_usuario');
-    const response = await fetchWithIP('general/usuarios/'+id_usuario+'/countConversationsUser' , {method:"GET"});
+    const response = await fetchWithIP('general/usuarios/' + id_usuario + '/countConversationsUser', { method: "GET" });
     const data = await response.json();
- 
+
     dispatch({
       type: 'GET_COUNT_CONVERSATIONS_HOME',
       payload: data
@@ -101,7 +125,7 @@ export const GetCountMessagesHomeReducer = (): ThunkAction<
 > => async (dispatch) => {
   try {
     const id_usuario = localStorage.getItem('id_usuario');
-    const response = await fetchWithIP('general/usuarios/'+id_usuario+'/countMessagesUser' , {method:"GET"});
+    const response = await fetchWithIP('general/usuarios/' + id_usuario + '/countMessagesUser', { method: "GET" });
     const data = await response.json();
 
     dispatch({
@@ -113,7 +137,7 @@ export const GetCountMessagesHomeReducer = (): ThunkAction<
   }
 };
 
-export const GetCountMessagesByUserAndChatHomeReducer = (chat_seleccionado:string): ThunkAction<
+export const GetCountMessagesByUserAndChatHomeReducer = (chat_seleccionado: string): ThunkAction<
   Promise<void>,
   RootState,
   unknown,
@@ -121,9 +145,9 @@ export const GetCountMessagesByUserAndChatHomeReducer = (chat_seleccionado:strin
 > => async (dispatch) => {
   try {
     const id_usuario = localStorage.getItem('id_usuario');
-    const response = await fetchWithIP('general/usuarios/'+id_usuario+'/countMessagesByUserAndChatbot/' + chat_seleccionado  , {method:"GET"});
+    const response = await fetchWithIP('general/usuarios/' + id_usuario + '/countMessagesByUserAndChatbot/' + chat_seleccionado, { method: "GET" });
     const data = await response.json();
-    console.log(data.count , "mesnajes , numero ----")
+    console.log(data.count, "mesnajes , numero ----")
     dispatch({
       type: 'GET_COUNT_MESSAGES_BY_USER_CHAT',
       payload: data
@@ -133,7 +157,7 @@ export const GetCountMessagesByUserAndChatHomeReducer = (chat_seleccionado:strin
   }
 };
 
-export const GetCountConversationsByUserAndChatHomeReducer = (chat_seleccionado:string): ThunkAction<
+export const GetCountConversationsByUserAndChatHomeReducer = (chat_seleccionado: string): ThunkAction<
   Promise<void>,
   RootState,
   unknown,
@@ -141,9 +165,9 @@ export const GetCountConversationsByUserAndChatHomeReducer = (chat_seleccionado:
 > => async (dispatch) => {
   try {
     const id_usuario = localStorage.getItem('id_usuario');
-    const response = await fetchWithIP('general/usuarios/'+id_usuario+'/countConversationsUserByChatbot/'+chat_seleccionado , {method:"GET"});
+    const response = await fetchWithIP('general/usuarios/' + id_usuario + '/countConversationsUserByChatbot/' + chat_seleccionado, { method: "GET" });
     const data = await response.json();
-    console.log(data.count , "CONVERSACIONES , numero ----")
+    console.log(data.count, "CONVERSACIONES , numero ----")
 
     dispatch({
       type: 'GET_COUNT_CONVERSATIONS_BY_USER_CHAT',
@@ -162,9 +186,9 @@ export const GetaverAgeConversationsMessagesHomeReducer = (): ThunkAction<
 > => async (dispatch) => {
   try {
     const id_usuario = localStorage.getItem('id_usuario');
-    const response = await fetchWithIP('general/usuarios/'+id_usuario+'/averageConversationsMessages', {method:"GET"});
+    const response = await fetchWithIP('general/usuarios/' + id_usuario + '/averageConversationsMessages', { method: "GET" });
     const data = await response.json();
-    console.log(data , "CONVERSACIONES , numero ----")
+    console.log(data, "CONVERSACIONES , numero ----")
 
     dispatch({
       type: 'GET_AVERAGE_CONVERSATIONS_MESSAGES',
@@ -174,7 +198,7 @@ export const GetaverAgeConversationsMessagesHomeReducer = (): ThunkAction<
     console.error('Failed to fetch chatbots:', error);
   }
 };
-export const GetaverAgeConversationsMessagesByUserAndChatHomeReducer = (chat_seleccionado:string): ThunkAction<
+export const GetaverAgeConversationsMessagesByUserAndChatHomeReducer = (chat_seleccionado: string): ThunkAction<
   Promise<void>,
   RootState,
   unknown,
@@ -182,7 +206,7 @@ export const GetaverAgeConversationsMessagesByUserAndChatHomeReducer = (chat_sel
 > => async (dispatch) => {
   try {
     const id_usuario = localStorage.getItem('id_usuario');
-    const response = await fetchWithIP('general/usuarios/'+id_usuario+'/averageConversationsMessagesByUserAndChatbot/'+chat_seleccionado , {method:"GET"});
+    const response = await fetchWithIP('general/usuarios/' + id_usuario + '/averageConversationsMessagesByUserAndChatbot/' + chat_seleccionado, { method: "GET" });
     const data = await response.json();
     console.log(data, "CONVERSACIONES , numero ----")
 
@@ -198,10 +222,7 @@ export const GetaverAgeConversationsMessagesByUserAndChatHomeReducer = (chat_sel
 export const duplicateChatbotReducer = (usuarioId: number, chatbotId: number): AppThunk => async (dispatch) => {
   try {
 
-    const response = await fetch(`${config.API_URL}chatbot/duplicate`, {
-      method: 'POST',
-      body: JSON.stringify({ "usuarioId":1, "chatbotId":1 }),
-    });
+    const response = await fetchWithIP(`chatbot/duplicate`, { method: "POST" }, { "usuarioId": 1, "chatbotId": 1 });
     console.log('id:', response, usuarioId, chatbotId)
 
     if (!response.ok) {
