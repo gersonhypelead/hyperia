@@ -40,15 +40,15 @@ const Home: React.FC = () => {
   return (
     <>
       <h2
-        onClick={() => console.log(rex_user_auth)}
+        onClick={() => console.log(rex_user_auth)} className='text-hola'
       >Hola {rex_user_auth?.personas?.nombre + " " + rex_user_auth?.personas?.apellido_paterno + " " + rex_user_auth?.personas?.apellido_materno}</h2>
 
       {/* Distribución horizontal de las cartas */}
       <Row gutter={[16, 16]}>
         <Col xs={24} lg={24}>
           {/* Columna para CardTokens y CardBot */}
-          <Row justify="center" gutter={[16, 16]} style={{ marginBottom: '20px' }}>
-            <Col xl={4} md={12}>
+          <Row justify="center" gutter={[16, 16]} style={{ marginBottom: '20px'}}>
+            <Col xl={4} md={12} className='graficoDonut' style={{ paddingBottom: '20px',backgroundColor: '#fff', borderRadius:'50px', boxShadow: '0 4px 8px rgba(12,12,12, 0.2)'}}>
               {/* Columna para el gráfico tipo Donut */}
               {/* <div style={{
                 border: '1px solid #f0f0f0',
@@ -71,7 +71,7 @@ const Home: React.FC = () => {
               />
               {/* </div> */}
             </Col>
-            <Col xl={5} md={12}>
+            <Col xl={5} md={12} className='cardTokens'>
               <CardTokens
                 title="Nº CONVERSACIONES"
                 value={rex_count_conversations.data?.[0]?.count}
@@ -79,7 +79,7 @@ const Home: React.FC = () => {
                 icon={<IdcardTwoTone />}
               />
             </Col>
-            <Col xl={5} md={12}>
+            <Col xl={5} md={12} className='cardTokens'>
               <CardTokens
                 title="Nº MENSAJES E/R"
                 value={rex_count_messages.data?.[0]?.count}
@@ -87,46 +87,45 @@ const Home: React.FC = () => {
                 icon={<MessageTwoTone />}
               />
             </Col>
-            <Col xl={5} md={12}>
+            <Col xl={5} md={12} className='cardTokens'>
               <CardTokens
                 title="MSJ/S E/R POR CONVERSACIÓN"
                 value={rex_average.data?.[0]?.average}
                 tokens={44}
               />
             </Col>
-            <Col xl={5} md={12}>
+            <Col xl={5} md={12} className='cardTokens'>
               <div
                 style={{
                   width: '100%',
-                  height: '150px',
-                  backgroundImage: "radial-gradient(circle farthest-side at 100%, #0ea5e9, #0c4a6e)",
+                  height: '130px',
+                  backgroundImage: "linear-gradient(137deg, rgba(34, 242, 255, 1) 0%, rgba(0, 255, 194, 1) 100%)",
                   position: 'relative',
-                  borderRadius: '8px',
-                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
-                  paddingLeft: '20px',
+                  borderRadius: '50px',
+                  boxShadow: '0 4px 8px rgba(12, 12, 12, 0.2)',
+                  paddingLeft: '50px',
                   marginBottom: '20px'
                 }}
               >
                 <Row>
                   <Col xl={12}
                     style={{
-                      position: 'relative'
+                      position: 'static'
                     }}
                   >
                     <div
                       style={{
-                        color: 'white',
+                        color: '#0C5257',
                       }}
                     >
                       <h3>
                         Plan Basico
                       </h3>
-                      <br />
 
                       <div
                         style={{
                           position: 'absolute',
-                          bottom: '10px'
+                          bottom: '20px'
                         }}
                       >
                         <div>
@@ -151,27 +150,6 @@ const Home: React.FC = () => {
                       </div>
                     </div>
                   </Col>
-                  <Col
-                    xl={12}
-                    style={{
-                      position: 'relative',
-                      height: '150px'
-                    }}
-                  >
-                    <img
-                      src={Bot01}
-                      style={{
-                        position: 'absolute',
-                        width: '150px',
-                        objectFit: 'cover',
-                        objectPosition: "50% 15%",
-                        maxWidth: 'none',
-                        height: '100%',
-                        display: 'block',
-                        inset: "0% 0% 0% auto",
-                      }}
-                    />
-                  </Col>
                 </Row>
 
 
@@ -180,7 +158,7 @@ const Home: React.FC = () => {
           </Row>
           <Divider />
           {/* Botón "Ver más detalles" alineado a la izquierda */}
-          <Row style={{ marginBottom: '20px' }}>
+          <Row style={{ marginBottom: '20px' }} className='btn-container'>
             <Col xl={12} md={12}>
               <Button type="primary">Ver más detalles</Button>
             </Col>
@@ -200,7 +178,7 @@ const Home: React.FC = () => {
           </Row>
 
           {/* Sección de CardBot */}
-          <Row justify="center" gutter={[16, 16]}>
+          <Row justify="center" gutter={[16, 16]} className='cardbots'>
             <Col xs={24}>
               <CardBot />
             </Col>

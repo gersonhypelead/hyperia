@@ -26,28 +26,35 @@ const CardPricing: React.FC<CardPricingProps> = ({
       <Card style={
         mostPopular ?
           {
-            borderRadius: '10px', position: 'relative',
-            border: '2px solid #FFD000'
-          } : {}
+            position: 'relative',
+            border: '2px solid #0C5257 ',
+            background:'linear-gradient(137deg, rgba(34, 242, 255, 1) 0%, rgba(0, 255, 194, 1) 100%)',
+
+          } : {
+            background:'rgba(34, 242, 255, 0.1)',
+            border:'1px solid #0C5257',
+          }
       }>
         {
           mostPopular ? (
             <div
               style={{
                 position: 'absolute',
-                top: '-12px',
+                top: '-15px',
                 width: '100%',
                 textAlignLast: 'center',
                 left: 0,
-                color: 'white'
+                color: 'white',
               }}
             >
               <Button
                 style={{
-                  background: 'black',
+                  background: '#0C5257',
                   color: 'white',
                   borderRadius: '20px',
-                  fontSize: '10px'
+                  fontSize: '10px',
+                  border:'none',
+                  fontWeight:'500',
                 }}
               >
                 MAS POPULAR

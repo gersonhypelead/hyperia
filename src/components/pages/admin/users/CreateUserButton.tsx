@@ -15,7 +15,7 @@ const CreateUserButton: React.FC = () => {
 
   return (
     <>
-      <Button type="primary" onClick={showModal}>
+      <Button type="primary" onClick={showModal} className="boton-crear">
         Crear Usuario
       </Button>
       <CreateUserModal visible={isModalVisible} onClose={handleCloseModal} />

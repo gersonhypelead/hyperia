@@ -162,9 +162,10 @@ const ChatComponent: React.FC<ChatProps> = ({
           width: '95%',
           height: '500px',
           // background: 'red',
-          borderRadius: '10px',
+          borderRadius: '25px',
           position: 'relative',
           border: '1px solid #C4C4C4',
+          boxShadow:' 0 0px 8px rgba(12, 12, 12, 0.2)'
         }}
       >
         {/* HEAD */}
@@ -175,9 +176,9 @@ const ChatComponent: React.FC<ChatProps> = ({
             paddingRight: '20px',
             paddingTop: '10px',
             paddingBottom: '10px',
-            background: '#03A9F4',
-            borderTopLeftRadius: '10px',
-            borderTopRightRadius: '10px',
+            background: 'linear-gradient(137deg, rgba(34, 242, 255, 1)  0%, rgba(0, 255, 194, 1) 100%)',
+            borderTopLeftRadius: '25px',
+            borderTopRightRadius: '25px',
             marginBottom: '10px',
             color: 'white',
             alignItems: 'center',
@@ -197,14 +198,15 @@ const ChatComponent: React.FC<ChatProps> = ({
             }}
           >
             <div
-              style={{ fontWeight: 'bold', fontSize: '18px', lineHeight: '1', background: 'transparent' }}
+              style={{ fontWeight: 'bold', fontSize: '18px', lineHeight: '1', background: 'transparent', color:' #0C5257' }}
             >
               {nombreChat}
             </div>
             <div
               style={{
                 background: 'transparent',
-                marginTop: '4px'
+                marginTop: '4px',
+                color:' #0C5257'
               }}
             >
               <CheckCircleTwoTone twoToneColor="#52c41a" />
@@ -217,7 +219,8 @@ const ChatComponent: React.FC<ChatProps> = ({
                 style={{
                   position: "absolute",
                   right: "20px",
-                  background: 'transparent'
+                  background: 'transparent',
+                  color:' #0C5257'
                 }}
               >
                 <Tooltip
@@ -285,8 +288,8 @@ const ChatComponent: React.FC<ChatProps> = ({
             alignContent: 'center',
             display: 'flex',
             alignItems: 'center',
-            borderBottomLeftRadius: '20px',
-            borderBottomRightRadius: '20px',
+            borderBottomLeftRadius: '25px',
+            borderBottomRightRadius: '25px',
           }}
         >
           {modeBot ? (

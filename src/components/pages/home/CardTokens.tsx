@@ -47,8 +47,8 @@ const CardTokens: React.FC<CardTokensProps> = ({
       </Space>
       <Text
         style={{
-          backgroundColor: '#e6f7ff',
-          color: '#1890ff',
+          backgroundColor: 'rgba(34, 242, 255, 0.3)',
+          color: '#0C5257',
           padding: '4px 60px',
           borderRadius: '4px',
           fontWeight: 500,

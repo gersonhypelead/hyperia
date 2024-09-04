@@ -35,7 +35,7 @@ const renderCustomizedLabel = (
 
 const ChartDonut: React.FC<ChartDonutProps> = ({
   data,
-  colors = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'],
+  colors = ['#00FFC2', '#22F2FF'],
   innerRadius = 60,
   outerRadius = 80,
   paddingAngle = 5,
