@@ -90,7 +90,7 @@ const TabDesign: React.FC = () => {
               <Col xl={12} md={12} style={{ paddingRight: '10px' }}>
                 <Row>
                   <Col xl={12} md={12} style={{ paddingRight: '10px' }}>
-                    <span>Selecciona un chat</span>
+                    <span>Selecciona un Chatbox</span>
                     <Select
                       labelRender={labelRender}
                       defaultValue="1"
@@ -99,7 +99,7 @@ const TabDesign: React.FC = () => {
                     />
                   </Col>
                   <Col xl={12} md={12} style={{ paddingLeft: '10px' }}>
-                    <span>Exporta un chat de ejemplo</span>
+                    <span>Importa un Chatbox de ejemplo</span>
                     <Select
                       labelRender={labelRender}
                       defaultValue="1"
@@ -113,18 +113,18 @@ const TabDesign: React.FC = () => {
                     <h3 style={{ lineHeight: '0.5' }}>Customiza tu chat</h3>
                   </Col>
                   <Col xl={12} md={12}>
-                    <span>Font Size</span>
+                    <span>Tamaño de letra</span>
                     <Input onBlur={(e) => setFontSize(e.target.value)} />
                   </Col>
                   <Col xl={12} md={12} style={{ paddingLeft: '10px' }}>
-                    <span>Font Family</span>
+                    <span>Fuente</span>
                     <Input onBlur={(e) => setFontFamily(e.target.value)} />
                   </Col>
 
                   {/*  */}
 
                   <Col xl={12} md={12} style={{ marginTop: '10px' }}>
-                    <span>Nombre del chat</span>
+                    <span>Nombre del Chatbox</span>
                     <Input onBlur={(e) => setNombreChat(e.target.value)} />
                   </Col>
                   <Col
@@ -132,14 +132,14 @@ const TabDesign: React.FC = () => {
                     md={12}
                     style={{ paddingLeft: '10px', marginTop: '10px' }}
                   >
-                    <span>Input placeholder</span>
+                    <span>Mensaje de ejemplo para el usuario</span>
                     <Input onBlur={(e) => setInputPlaceholder(e.target.value)} />
                   </Col>
 
                   {/*  */}
 
                   <Col xl={12} md={12} style={{ marginTop: '10px' }}>
-                    <span>Logo del Chat</span>
+                    <span>Logo del Chatbox</span>
                     <Upload
                       name="avatar"
                       listType="picture-card"
@@ -165,7 +165,7 @@ const TabDesign: React.FC = () => {
                     md={12}
                     style={{ paddingLeft: '10px', marginTop: '10px' }}
                   >
-                    <span>Icono de boton enviar mensaje</span>
+                    <span>Icono para enviar un mensaje</span>
                     <Upload
                       name="avatar"
                       listType="picture-card"
@@ -193,7 +193,7 @@ const TabDesign: React.FC = () => {
                     style={{ paddingLeft: '10px', marginTop: '10px' }}
                   >
                     <div style={{ marginBottom: '10px' }}>
-                      <div style={{ marginBottom: '-15px' }}>C. del Header</div>
+                      <div style={{ marginBottom: '-15px' }}>Color de la parte superior</div>
                       <br />
                       <ColorPicker defaultValue="#1677ff" size="small" showText />
                     </div>
@@ -204,7 +204,7 @@ const TabDesign: React.FC = () => {
                     style={{ paddingLeft: '10px', marginTop: '10px' }}
                   >
                     <div style={{ marginBottom: '10px' }}>
-                      <div style={{ marginBottom: '-15px' }}>C. del Titulo</div>
+                      <div style={{ marginBottom: '-15px' }}>Color del nombre del Chatbox</div>
                       <br />
                       <ColorPicker defaultValue="#1677ff" size="small" showText />
                     </div>
@@ -216,7 +216,7 @@ const TabDesign: React.FC = () => {
                   >
                     <div style={{ marginBottom: '10px' }}>
                       <div style={{ marginBottom: '-15px' }}>
-                        C. del T. del Emisor
+                        Color del mensaje del usuario
                       </div>
                       <br />
                       <ColorPicker defaultValue="#1677ff" size="small" showText />
@@ -229,7 +229,7 @@ const TabDesign: React.FC = () => {
                   >
                     <div style={{ marginBottom: '10px' }}>
                       <div style={{ marginBottom: '-15px' }}>
-                        C. T. del Receptor
+                        Color de la respuesta del Chatbox
                       </div>
                       <br />
                       <ColorPicker defaultValue="#1677ff" size="small" showText />

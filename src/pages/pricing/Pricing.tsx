@@ -1,51 +1,69 @@
 import React from 'react';
 import { Button, Card, Col, Row } from 'antd';
 import CardPricing from './components/CardPricing';
-import Bot01 from '../../assets/img/bots/bo01.webp'
-import Bot02 from '../../assets/img/bots/bot02.webp'
-import Bot03 from '../../assets/img/bots/bot03.webp'
-import Bot04 from '../../assets/img/bots/bot04.webp'
+import Bot01 from '../../assets/img/bots/bo01.webp';
+import Bot02 from '../../assets/img/bots/bot02.webp';
+import Bot03 from '../../assets/img/bots/bot03.webp';
+import Bot04 from '../../assets/img/bots/bot04.webp';
 
 const Pricing: React.FC = () => {
   return (
     <>
-      <Row
-        justify="center"
-        style={{ textAlign: 'center', marginBottom: '50px', marginTop: '-50px', background:'#fff', paddingBottom:'40px', borderRadius:'50px', boxShadow:' 0 4px 8px rgba(12, 12, 12, 0.2)' }}
+      <div
+        style={{
+          textAlign: 'center',
+          marginBottom: '50px',
+          marginTop: '-30px',
+          background: '#fff',
+          paddingBottom: '40px',
+          borderRadius: '50px',
+          boxShadow: ' 0 4px 8px rgba(12, 12, 12, 0.2)',
+        }}
       >
-        <Col>
-          <h1
-            style={{
-              fontSize: '40px'
-            }}
-          >Precios orientados a <br/>objetivos que escalan contigo</h1>
-          <div
-            style={{ marginBottom: '30px' }}
-          >Pruebe las funciones del plan Team durante 14 días · No se requiere tarjeta de crédito · No se necesita codificación</div>
-          <Button className='boton-crear' type='primary'>Comienza tu prueba gratuita</Button>
-        </Col>
-      </Row>
-      <Row justify="center" gutter={[16, 16]} style={{ marginTop: '20px' }}>
-        <Col xl={6} md={6}>
-          <CardPricing
-            title='Basico'
-            subTitle='Pequeñas Empresas'
-            image={Bot01}
-            pricing={52}
-            pricingMo={65}
-          />
-        </Col>
-        <Col xl={6} md={6}>
-          <CardPricing
-            title='Team'
-            subTitle='Equipo en una empresa en crecimiento'
-            image={Bot02}
-            pricing={142}
-            pricingMo={169}
-            mostPopular={true}
-          />
-        </Col>
-        {/* <Col xl={4} md={6}>
+        <Row justify="center">
+          <Col>
+            <h1
+              style={{
+                fontSize: '40px',
+              }}
+            >
+              Precios orientados a <br />
+              objetivos que escalan contigo
+            </h1>
+            <div style={{ marginBottom: '30px' }}>
+              Pruebe las funciones del plan Team durante 14 días · No se
+              requiere tarjeta de crédito · No se necesita codificación
+            </div>
+            <Button
+              className="boton-crear"
+              type="primary"
+              style={{ marginBottom: '40px' }}
+            >
+              Comienza tu prueba gratuita
+            </Button>
+          </Col>
+        </Row>
+        <Row justify="center" gutter={[16, 16]} style={{ marginTop: '20px' }}>
+          <Col xl={6} md={6}>
+            <CardPricing
+              title="Basico"
+              subTitle="Pequeñas Empresas"
+              image={Bot01}
+              pricing={52}
+              pricingMo={65}
+            />
+          </Col>
+          <Col xl={6} md={6}>
+            <CardPricing
+              title="Team"
+              subTitle="Equipo en una empresa en crecimiento"
+              image={Bot02}
+              pricing={142}
+              pricingMo={169}
+              mostPopular={true}
+            />
+          </Col>
+          {/* <Col xl={4} md={6}>
           <CardPricing
             title='Empresarial'
             subTitle='Equipo en una gran empresa.'
@@ -63,7 +81,8 @@ const Pricing: React.FC = () => {
             pricingMo={650}
           />
         </Col> */}
-      </Row>
+        </Row>
+      </div>
     </>
   );
 };
