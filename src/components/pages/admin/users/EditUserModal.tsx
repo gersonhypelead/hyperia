@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Form, Input, Select, message } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchTiposUsuarios } from '../../../../redux/actions/tipo_usuarios/tiposUsuariosActions';
+import { FetchTiposUsuariosReducer } from '../../../../redux/actions/tipo_usuarios/tiposUsuariosActions';
 import { AppDispatch } from '../../../../redux/store/store';
+import { updateUser } from '../../../../redux/actions/users/usuariosActions';
 
 interface EditUserModalProps {
   visible: boolean;
   onClose: () => void;
-  onSave: (values: any) => void;
   user: any;
 }
 
-const EditUserModal: React.FC<EditUserModalProps> = ({ visible, onClose, onSave, user }) => {
+const EditUserModal: React.FC<EditUserModalProps> = ({ visible, onClose, user }) => {
 
   const [form] = Form.useForm();
   const dispatch: AppDispatch = useDispatch();
@@ -24,7 +24,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ visible, onClose, onSave,
 
   useEffect(() => {
     if (visible) {
-      dispatch(fetchTiposUsuarios());
+      dispatch(FetchTiposUsuariosReducer());
     }
   }, [dispatch, visible]);
 
@@ -32,22 +32,34 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ visible, onClose, onSave,
     if (user && rex_tiposUsuarios.length > 0) {
       const tipoUsuarioId = rex_tiposUsuarios.find((tipo: any) => tipo.tipo_usuario === user.tipo_usuario)?.id;
       setInitialTipoUsuarioId(tipoUsuarioId);
+      
       form.setFieldsValue({
-        ...user,
-        tipo_usuario_id: tipoUsuarioId,
+        nombre: user.personas?.nombre || '', // Obtén el nombre de `user.personas`
+        apellido_paterno: user.personas?.apellido_paterno || '', // Obtén el apellido paterno de `user.personas`
+        apellido_materno: user.personas?.apellido_materno || '', // Obtén el apellido materno de `user.personas`
+        usuario: user.usuario || '', // Usuario de `user`
+        tipo_usuario_id: tipoUsuarioId, // Tipo de usuario
+        contrasena: '', // Deja la contraseña vacía ya que no se suele mostrar
       });
     }
   }, [user, rex_tiposUsuarios, form]);
 
   const handleSaveUser = async () => {
     const loadingMessage = message.loading('Guardando...', 0);
-
+  
     try {
-      const values = await form.validateFields();
-      onSave(values);
+      const userData = await form.validateFields();
+      
+      // Asegúrate de pasar el id del usuario
+      const userToUpdate = {
+        ...userData,
+        id: user.id, // Incluye el id del usuario desde los props
+      };
+  
+      dispatch(updateUser(userToUpdate.id, userData)); // Llamada al dispatch con el id
     } catch (error) {
       message.error('Error al guardar');
-      console.error('Validation failed:', error);
+      console.error('Error de validación:', error);
     } finally {
       loadingMessage();
     }
@@ -90,7 +102,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ visible, onClose, onSave,
         >
           <Input />
         </Form.Item>
-        <Form.Item
+        {/* <Form.Item
           name="tipo_usuario_id"
           label="Tipo Usuario"
           rules={[{ required: true, message: 'Por favor seleccione el tipo de usuario' }]}
@@ -106,7 +118,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ visible, onClose, onSave,
               </Select.Option>
             ))}
           </Select> */}
-        </Form.Item>
+        {/* </Form.Item> */} 
         <Form.Item
           name="contrasena"
           label="Contraseña"

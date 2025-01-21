@@ -11,6 +11,10 @@ import {
   CREATE_USER_SUCCESS,
   CREATE_USER_FAILURE,
   SET_USUARIOS_FILTERS,
+  PAQUETES_USERS_REQUEST,
+  PAQUETES_USERS_SUCCESS,
+  PAQUETES_USERS_FAILURE
+
 } from '../../../constantes/admin/users/Users';
 
 const initialState = {
@@ -27,7 +31,7 @@ const initialState = {
   loading: false,
   error: null,
   user: null,
-  filters:{},
+  filters: {},
 };
 
 const Users = (state = initialState, action: any) => {
@@ -84,19 +88,39 @@ const Users = (state = initialState, action: any) => {
         rex_error: action.error,
       };
     case CREATE_USER_REQUEST:
-      return { 
-        ...state, 
-        loading: true };
+      return {
+        ...state,
+        loading: true
+      };
     case CREATE_USER_SUCCESS:
-      return { 
-        ...state, 
-        loading: false, 
-        user: action.payload };
+      return {
+        ...state,
+        loading: false,
+        user: action.payload
+      };
     case CREATE_USER_FAILURE:
-      return { 
-        ...state, 
-        loading: false, 
-        error: action.error };
+      return {
+        ...state,
+        loading: false,
+        error: action.error
+      };
+    case PAQUETES_USERS_REQUEST:
+      return {
+        ...state,
+        loading: true
+      };
+    case PAQUETES_USERS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        user: action.payload
+      };
+    case PAQUETES_USERS_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.error
+      };
     case SET_USUARIOS_FILTERS:
       return {
         ...state,

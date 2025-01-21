@@ -17,7 +17,6 @@ export const createUser = (userData: any) => async (dispatch: any) => {
       userData,
     );
   if (data.ok) {
-    console.log("nuevo")
     dispatch(CREATE_USER_SUCCESS(data));
   } else {
     dispatch(CREATE_USER_FAILURE('Error al crear el usuario'));

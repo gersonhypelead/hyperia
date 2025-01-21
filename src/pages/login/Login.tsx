@@ -1,4 +1,4 @@
-import { Alert, Input } from 'antd';
+import { Alert, Input, App } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
@@ -6,42 +6,46 @@ import { userCredential } from '../../auth/types/userTypes';
 import { useLogin } from '../../hooks/useLogin';
 import './style.css';
 import config from '../../config'
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../redux/store/store';
+import { LoginAuthReducer } from '../../redux/actions/auth/Auth';
 
 const Login = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const { notification } = App.useApp();
+
   const [usuario, setUsuario] = useState('');
   const [contrasena, setContrasena] = useState('');
   const [notificacion, setNotificacion] = useState(false);
   const { data, error, doLogin } = useLogin();
 
   const handleLogin = async () => {
+
     const loginCred: userCredential = {
       usuario,
       contrasena,
     };
-    try {
-      const login = await doLogin(loginCred);
-      console.log("login: ----------");
-      console.log(login);
 
-      navigate('/');
-    } catch (e) {
-      setNotificacion(true)
-      // alert('error al loguearte: ' + error);
-      // messageApi.info(
-      //   'Lo sentimos, el usuario o contraseña son incorrectas.',
-      // );
+    const rpta: any = await dispatch(LoginAuthReducer(loginCred));
+
+    if (rpta.respuesta) {
+      notification.success({ message: rpta.mensaje });
+      navigate('/home');
+    } else {
+      notification.error({ message: "Lo sentimos, el usuario o contraseña son incorrectas" });
     }
   };
 
   const loginGoogle = () => {
-    window.location.href =`${config.API_URL}auth/google`;
+    window.location.href = `${config.API_URL}auth/google`;
   };
 
   return (
     <div className="container">
       <div className="left">
-        <h1>Bienvenido a Hyperia</h1>
+        <p>Bienvenido a </p>
+        <h1>Hyperia</h1>
       </div>
       <div className="right">
         {

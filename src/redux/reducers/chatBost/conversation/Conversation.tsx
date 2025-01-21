@@ -4,7 +4,10 @@ import {
   FETCH_CONVERSATIONS_FAILURE,
   FETCH_CONVERSATIONS_SUPPORT_REQUEST,
   FETCH_CONVERSATIONS_SUPPORT_SUCCESS,
-  ConversationsActionTypes
+  ConversationsActionTypes,
+  SET_PAGE_CONVERSATIONS,
+  SET_LIMIT_CONVERSATIONS,
+  SET_TOTAL_CONVERSATIONS
 } from '../../../../../src/constantes/chatBots/Conversation/Conversation';
 
 interface ConversationsState {
@@ -13,6 +16,9 @@ interface ConversationsState {
   rex_conversations: any[];
   rex_conversation_support_chat: any[];
   rex_error: string | null;
+  rex_page: number,
+  rex_limit: number,
+  rex_total: number
 }
 
 const INIT_STATE: ConversationsState = {
@@ -21,6 +27,10 @@ const INIT_STATE: ConversationsState = {
   rex_conversations: [],
   rex_conversation_support_chat: [],
   rex_error: null,
+  rex_page: 1,
+  rex_limit: 5,
+  rex_total: 0
+
 };
 
 export default (state = INIT_STATE, action: ConversationsActionTypes): ConversationsState => {
@@ -52,6 +62,22 @@ export default (state = INIT_STATE, action: ConversationsActionTypes): Conversat
         ...state,
         rex_loading_support_chat: false,
         rex_conversation_support_chat: action.payload,
+      };
+    /* paginate  */
+    case SET_PAGE_CONVERSATIONS:
+      return {
+        ...state,
+        rex_page: action.payload,
+      };
+    case SET_LIMIT_CONVERSATIONS:
+      return {
+        ...state,
+        rex_limit: action.payload,
+      };
+    case SET_TOTAL_CONVERSATIONS:
+      return {
+        ...state,
+        rex_total: action.payload,
       };
     default:
       return state;

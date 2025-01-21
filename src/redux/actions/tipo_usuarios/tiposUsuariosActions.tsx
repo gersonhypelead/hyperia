@@ -1,7 +1,6 @@
 import { AppDispatch } from '../../store/store';
 import config from '../../../config';
 import { Dispatch } from 'redux';
-import fetchWithIP from '../utils/fetchHeaders';
 
 import { 
   FETCH_TIPOS_USUARIOS_REQUEST,
@@ -18,43 +17,63 @@ import {
   DELETE_TYPE_USER_REQUEST_USERS,
   DELETE_TYPE_USER_SUCCESS_USERS,
   DELETE_TYPE_USER_FAILURE_USERS
- } from '../../../constantes/admin/typeUsers/TypeUser';
+} from '../../../constantes/admin/typeUsers/TypeUser';
+import fetchWithIP from '../utils/fetchHeaders';
 
- export interface UserData {
-  id: number;
+export interface UserData {
+  id?: number;
   tipo_usuario?: string;
-
+  createdFrom?: string;
+  createdTo?: string;
+  updatedFrom?: string;
+  updatedTo?: string;
 }
 
-export const fetchTiposUsuarios = (
+export const FetchTiposUsuariosReducer = (
   page: number = 1, 
-  limit: number = 10,
+  limit: number = 10, 
   sortColumn: string = 'id', 
-  sortOrder: string = 'asc'
+  sortOrder: string = 'asc', 
+  filters?: {
+    id?: number,
+    tipo_usuario?: string,
+    createdFrom?: string,
+    createdTo?: string,
+    updateFrom?: string,
+    updateTo?: string,
+  }
 ) => async (dispatch: AppDispatch) => {
   dispatch({ type: FETCH_TIPOS_USUARIOS_REQUEST });
   try {
+    const queryParams = new URLSearchParams({
+      page: String(page),
+      limit: String(limit),
+      sortColumn,
+      sortOrder,
+    });
+    if (filters?.tipo_usuario) queryParams.append('tipo_usuario', filters.tipo_usuario);
+    if (filters?.createdFrom) queryParams.append('createdFrom', filters.createdFrom);
+    if (filters?.createdTo) queryParams.append('createdTo', filters.createdTo);
+    if (filters?.updateFrom) queryParams.append('updateFrom', filters.updateFrom);
+    if (filters?.updateTo) queryParams.append('updateTo', filters.updateTo);
     // const response = await fetch(`${config.API_URL}tipo-usuarios?page=${page}&limit=${limit}&sortColumn=${sortColumn}&sortOrder=${sortOrder}`);
-    const response = await fetchWithIP(`tipo-usuarios` , {method:"GET"});
-    if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-    } 
+    const response = await fetch(`${config.API_URL}tipo-usuarios?${queryParams.toString()}`);
     const data = await response.json();
+
     if (data.respuesta) {
       dispatch({
         type: FETCH_TIPOS_USUARIOS_SUCCESS,
         payload: {
-              tipos_usuarios: data.data, 
-              meta: data.meta
+          tipoUsuarios: data.data,
+          meta: {
+            ...data.meta,
+            page: page,
+            limit: limit
+          }
         }
       });
-      console.log('total2:', data.meta)
-      console.log('payload:', data.data)
     } else {
-      dispatch({
-        type: FETCH_TIPOS_USUARIOS_FAILURE,
-        error: 'Error en la respuesta del servidor',
-      });
+      throw new Error(data.message);
     }
   } catch (error) {
     dispatch({
@@ -79,16 +98,11 @@ export const createTypeUser = (typeuserData: any) => async (dispatch: any) => {
   dispatch(CREATE_TYPE_USER_REQUEST());
 
   try {
-    const response = await fetch(`${config.API_URL}tipo-usuarios`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(typeuserData),
-    });
-
+    const response = await fetchWithIP(`tipo-usuarios`, {
+      method: 'POST'},
+      typeuserData,
+    );
     const data = await response.json();
-
     if (response.ok) {
       dispatch(CREATE_TYPE_USER_SUCCESS(data));
     } else {
@@ -103,35 +117,24 @@ export const createTypeUser = (typeuserData: any) => async (dispatch: any) => {
 export const updateTypeUser = (typeuserData: UserData) => {
   return async (dispatch: Dispatch) => {
     dispatch({ type: UPDATE_TYPE_USER_REQUEST_USERS });
-
-    console.log('Datos que se están actualizando:', typeuserData);
-
     try {
-      const response = await fetch(`${config.API_URL}tipo-usuarios/${typeuserData.id}`, {
+      const response = await fetchWithIP(`tipo-usuarios/${typeuserData.id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          tipo_usuario: typeuserData.tipo_usuario
-
-        }),
+      }, {
+        tipo_usuario: typeuserData.tipo_usuario,
       });
+      
+      const data = await response.json();
 
       if (!response.ok) {
-        const errorData = await response.json(); 
-        throw new Error(errorData.message || 'Error en la actualización'); 
+        throw new Error(data.message || 'Error en la actualización');
       }
-
-      const data = await response.json();
-      const updatedUser = data.data[0]; 
+      const updatedUser = data.data[0]; // Ajusta esto si el backend devuelve el formato diferente
 
       dispatch({
         type: UPDATE_TYPE_USER_SUCCESS_USERS,
         payload: updatedUser,
       });
-
-      console.log('payload:', updatedUser);
     } catch (error: any) {
       dispatch({
         type: UPDATE_TYPE_USER_FAILURE_USERS,
@@ -141,35 +144,29 @@ export const updateTypeUser = (typeuserData: UserData) => {
   };
 };
 
+
 export const deleteTypeUser = (userId: number) => {
   return async (dispatch: Dispatch) => {
     dispatch({ type: DELETE_TYPE_USER_REQUEST_USERS });
 
     try {
-      const response = await fetch(`${config.API_URL}tipo-usuarios/${userId}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      const response = await fetchWithIP(`tipo-usuarios/${userId}`, {
+        method: 'DELETE'
       });
 
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Error en la eliminación');
       }
-
       dispatch({
         type: DELETE_TYPE_USER_SUCCESS_USERS,
         payload: userId, // El payload puede ser el ID del usuario eliminado
       });
-
-      console.log('El usuario con ID:', userId, 'ha sido eliminado exitosamente');
     } catch (error: any) {
       dispatch({
         type: DELETE_TYPE_USER_FAILURE_USERS,
         error: error.message || 'Error en la eliminación',
       });
-      console.error('Error al eliminar el tipo de usuario:', error.message);
     }
   };
 };

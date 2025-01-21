@@ -7,6 +7,8 @@ import {
 import config from '../../../../config';
 import fetchWithIP from '../../utils/fetchHeaders';
 import { FETCH_CONVERSATIONS_SUPPORT_SUCCESS } from '../../../../constantes/chatBots/Conversation/Conversation';
+import { selectConversacionSeleccionada, selectSupportConversacionSeleccionado } from '../../../reducers/selectors/selectors';
+import { SetSupportSeleccionadoHome, UpdateSupportSeleccionadoHome } from '../../home/Home';
 
 export const CreateConversationSupportReducer = (
   mensaje: string
@@ -17,30 +19,34 @@ export const CreateConversationSupportReducer = (
   Action<string>
 > => async (dispatch, getState) => {
 
-  console.log("CHAT SOPORTE")
+  console.log("CONVERSACION-SUPPORT & ----- == ")
 
-  let id_conversacion = localStorage.getItem("SUPPORT_CONVERSACION_ID");
+  //const support_seleccionado = selectSupportConversacionSeleccionado(getState())
+  const support_seleccionado = localStorage.getItem("conversacion_support")
+  
+  let id_conversacion = support_seleccionado;
   const idChatBotSupport = 1;
-
-  if (!id_conversacion) {
-    await fetchWithIP('chatbots/' + idChatBotSupport + '/conversaciones', {
+  console.log(id_conversacion , "/////////////)))))))))))))))))))))))))))000")
+  if (id_conversacion ===  null) {
+    console.log("NI SI QUIER ENTRO AQUI ----")
+    await fetchWithIP('chatbots/token123/conversaciones', {
       method: 'POST',
     }).then(async res => {
       return res.json()
     })
       .then(data => {
-        // console.log(data);
-        localStorage.setItem("SUPPORT_CONVERSACION_ID", data.id)
-        id_conversacion = data.id
-
+        const rpta = data.data[0]
+        dispatch(UpdateSupportSeleccionadoHome(rpta.id))
+        id_conversacion = rpta.identificador
+        localStorage.setItem("conversacion_support" , rpta.identificador)
       }).catch((error) => {
         console.log(error)
       });
   }
+  console.log(id_conversacion , "/////////////)))))))))))))))))))))))))))000 22222222222")
 
   let mensaje_bot = "";
-
-  await fetchWithIP('chatbots/' + idChatBotSupport + '/conversaciones/' + id_conversacion + '/mensajes', {
+  await fetchWithIP('chatbots/token123/conversaciones/' + id_conversacion + '/mensajes/identificador', {
     method: 'POST'
   },
     {
@@ -53,7 +59,6 @@ export const CreateConversationSupportReducer = (
     .then(data => {
       console.log(data);
       mensaje_bot = data;
-      // localStorage.setItem("TAB_CHAT_CONVERSACION_ID", data.id)
     }).catch((error) => {
       console.log(error)
     });
@@ -70,9 +75,12 @@ export const GetConversationSupportReducer = (
   unknown,
   Action<string>
 > => async (dispatch, getState) => {
+  
   const idChatBotSupport = 1;
   let chat_converation: any = [];
-  if (id_conversation === 0) id_conversation = localStorage.getItem("SUPPORT_CONVERSACION_ID");
+
+  const conversacionSeleccionada = selectConversacionSeleccionada(getState());
+  if (id_conversation === 0) id_conversation = conversacionSeleccionada
 
   if (id_conversation) {
     await fetchWithIP('chatbots/' + idChatBotSupport + '/conversaciones/' + id_conversation + '/mensajes',
@@ -84,7 +92,6 @@ export const GetConversationSupportReducer = (
         return res.json()
       })
       .then(data => {
-
         data.map((dat: any) => {
           chat_converation.push({
             "id": dat.id,

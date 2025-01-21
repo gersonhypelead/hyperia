@@ -6,6 +6,7 @@ import {
     FETCH_AUDITORIAS_TABLE_FAILURE
 
 } from '../../../constantes/admin/auditorias/Auditorias';
+import fetchWithIP from '../utils/fetchHeaders';
 
 
 export const findAuditoriaTableUser = (
@@ -15,7 +16,7 @@ export const findAuditoriaTableUser = (
     return async (dispatch: AppDispatch) => {
         dispatch({ type: FETCH_AUDITORIAS_TABLE_REQUEST });
         try {
-            const response = await fetch(`${config.API_URL}auditorias/tablaUser?tabla=${tabla}&pk_actualizado=${pk_actualizado}`);
+            const response = await fetchWithIP(`auditorias/tablaUser?tabla=${tabla}&pk_actualizado=${pk_actualizado}` , {method:"GET"});
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }

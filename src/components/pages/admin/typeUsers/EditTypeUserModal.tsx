@@ -1,44 +1,49 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Form, Input, Select, message } from 'antd';
+import { Modal, Form, Input, message } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchTiposUsuarios } from '../../../../redux/actions/tipo_usuarios/tiposUsuariosActions';
-import { RootState, AppDispatch } from '../../../../redux/store/store';
+import { FetchTiposUsuariosReducer, updateTypeUser } from '../../../../redux/actions/tipo_usuarios/tiposUsuariosActions';
+import { AppDispatch } from '../../../../redux/store/store';
 
 interface EditTypeUserModalProps {
   visible: boolean;
   onClose: () => void;
-  onSave: (values: any) => void;
   user: any;
 }
 
-const EditTypeUserModal: React.FC<EditTypeUserModalProps> = ({ visible, onClose, onSave, user }) => {
-
+const EditTypeUserModal: React.FC<EditTypeUserModalProps> = ({ visible, onClose, user }) => {
   const [form] = Form.useForm();
   const dispatch: AppDispatch = useDispatch();
+  
   const {
+    rex_meta,
     rex_loading,
+    rex_sortColumn,
+    rex_sortOrder
   } = useSelector(({ tipoUsuarios }: any) => tipoUsuarios);
 
   useEffect(() => {
-    if (visible) {
+    if (visible && user) {
       form.setFieldsValue({
         tipo_usuario: user.tipo_usuario, 
       });
     }
-  }, [dispatch, visible, user, form]);
+  }, [visible, user, form]);
 
-
-  const handleSaveUser = async () => {
-    const loadingMessage = message.loading('Guardando...', 0);
-
+  const handleSave = async () => {
     try {
       const values = await form.validateFields();
-      onSave(values);
+      const updatedUser = {
+        id: user.id,
+        tipo_usuario: values.tipo_usuario,
+      };
+
+      await dispatch(updateTypeUser(updatedUser));
+      message.success('Tipo de Usuario actualizado correctamente');
+      dispatch(FetchTiposUsuariosReducer(rex_meta.page, rex_meta.limit, rex_sortColumn, rex_sortOrder));
+      onClose();
     } catch (error) {
-      message.error('Error al guardar');
-      console.error('Validation failed:', error);
-    } finally {
-      loadingMessage();
+      message.error('Error al actualizar el tipo usuario');
+      console.error('Update failed:', error);
     }
   };
 
@@ -47,11 +52,10 @@ const EditTypeUserModal: React.FC<EditTypeUserModalProps> = ({ visible, onClose,
       title="Editar Usuario"
       visible={visible}
       onCancel={onClose}
-      onOk={handleSaveUser}
+      onOk={handleSave}
       confirmLoading={rex_loading}
     >
       <Form form={form} layout="vertical">
-    
         <Form.Item
           name="tipo_usuario"
           label="Tipo de usuario"

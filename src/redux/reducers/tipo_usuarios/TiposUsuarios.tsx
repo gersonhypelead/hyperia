@@ -11,19 +11,20 @@ import {
   DELETE_TYPE_USER_REQUEST_USERS,
   DELETE_TYPE_USER_SUCCESS_USERS,
   DELETE_TYPE_USER_FAILURE_USERS
-
 } from "../../../constantes/admin/typeUsers/TypeUser";
 
-
 const initialState = {
-  rex_loading: false,
   rex_tiposUsuarios: [],
+  rex_loading: false,
   rex_error: null,
   rex_meta: {
     page: 1,
     limit: 10,
     total: 0,
   },
+  rex_sortColumn: 'tipo_usuario',
+  rex_sortOrder: 'asc',
+  filters: {},
 };
 
 const TiposUsuarios = (state = initialState, action: any) => {
@@ -37,8 +38,9 @@ const TiposUsuarios = (state = initialState, action: any) => {
       return {
         ...state,
         rex_loading: false,
-        rex_tiposUsuarios: action.payload.tipos_usuarios,
-        rex_meta: action.payload.meta
+        rex_tiposUsuarios: action.payload.tipoUsuarios,
+        rex_meta: action.payload.meta,
+        
       };
     case FETCH_TIPOS_USUARIOS_FAILURE:
       return {

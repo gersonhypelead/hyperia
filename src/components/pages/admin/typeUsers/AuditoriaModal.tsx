@@ -10,7 +10,9 @@ interface AuditoriaModalProps {
   userId: number; // Asegúrate de que `userId` sea un número
 }
 
-const AuditoriaModal: React.FC<AuditoriaModalProps> = ({ visible, onClose, userId }) => {
+const AuditoriaModal: React.FC<AuditoriaModalProps> = ({ 
+  visible, onClose, userId 
+}) => {
   const [form] = Form.useForm();
   const dispatch: AppDispatch = useDispatch();
   const [selectedAudit, setSelectedAudit] = useState<any>(null);

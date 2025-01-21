@@ -15,6 +15,7 @@ const Register = () => {
   const [apellidoMaterno, setApellidoMaterno] = useState('');
   const [usuario, setUsuario] = useState('');
   const [contrasena, setContrasena] = useState('');
+  const [email, setEmail] = useState('');
 
   const { error, OptRegister } = useRegister();
 
@@ -22,8 +23,8 @@ const Register = () => {
     const registerData: userRegister = {
       nombre,
       apellido_paterno: apellidoPaterno,
-      apellido_materno: apellidoMaterno,
-      usuario,
+      
+      email: email,
       contrasena,
       tipo_usuario_id: 1,
     };
@@ -31,7 +32,7 @@ const Register = () => {
     if (error) {
       alert('error al registrar: ' + error);
     } else {
-      navigate('/');
+      navigate('/validateCode', {state: { email} });
     }
   };
   return (
@@ -66,22 +67,22 @@ const Register = () => {
             onChange={(e) => setNombre(e.target.value)}
           />
           <Input
-            placeholder="Apellido paterno"
+            placeholder="Apellido(s)"
             style={{ height: '50px' }}
             value={apellidoPaterno}
             onChange={(e) => setApellidoPaterno(e.target.value)}
           />
-          <Input
+          {/*<Input
             placeholder="Apellido materno"
             style={{ height: '50px' }}
             value={apellidoMaterno}
             onChange={(e) => setApellidoMaterno(e.target.value)}
-          />
+          />*/}
           <Input
-            placeholder="Usuario"
+            placeholder="Email"
             style={{ height: '50px' }}
-            value={usuario}
-            onChange={(e) => setUsuario(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <div style={{ display: 'flex', gap: '10px' }}>
             <Input

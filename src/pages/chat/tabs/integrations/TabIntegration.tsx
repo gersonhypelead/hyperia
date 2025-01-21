@@ -5,11 +5,13 @@ import ImgInstagram from '../../../../assets/img/socialNetworks/instagram.jpg'
 import ImgWhatsapp from '../../../../assets/img/socialNetworks/whatsapp.png'
 import ImgWebsite from '../../../../assets/img/socialNetworks/website.avif'
 import { CheckCircleTwoTone, HeartTwoTone, SmileTwoTone } from '@ant-design/icons';
+import FacebookIntegration from './FacebookIntegration';
+import { useNavigate } from 'react-router-dom';
 
 const { Step } = Steps;
 
 const TabIntegration: React.FC = () => {
-
+  const navigate = useNavigate();
   const [isModalFacebook, setIsModalFacebook] = useState(false);
   const [isModalInstagram, setIsModalInstagram] = useState(false);
   const [isModalWhatsapp, setIsModalWhatsapp] = useState(false);
@@ -17,10 +19,10 @@ const TabIntegration: React.FC = () => {
   const [stepCompleted, setStepCompleted] = useState(0);
 
   const socialNetworks = [
-    { logo: ImgFacebook, title: 'Facebook Messenger', subTitle: 'Conecta tu chatbot con Facebook', action: () => setIsModalFacebook(true) },
-    { logo: ImgInstagram, title: 'Instagram', subTitle: 'Conecta tu chatbot con Instagram', action: () => setIsModalInstagram(true) },
-    { logo: ImgWhatsapp, title: 'Whatsapp', subTitle: 'Conecta tu chatbot con Whatsapp', action: () => setIsModalWhatsapp(true) },
-    { logo: ImgWebsite, title: 'Website', subTitle: 'Conecta tu chatbot con tu website', action: () => setIsModalWebsite(true) }
+    { ruta:'/chats/integracion-facebook', logo: ImgFacebook, title: 'Facebook Messenger', subTitle: 'Conecta tu chatbot con Facebook', action: () => setIsModalFacebook(true) },
+    { ruta: null, logo: ImgInstagram, title: 'Instagram', subTitle: 'Conecta tu chatbot con Instagram', action: () => setIsModalInstagram(true) },
+    { ruta:'/chats/integracion-whatsapp', logo: ImgWhatsapp, title: 'Whatsapp', subTitle: 'Conecta tu chatbot con Whatsapp', action: () => setIsModalWhatsapp(true) },
+    { ruta:'/chats/integracion-web', logo: ImgWebsite, title: 'Website', subTitle: 'Conecta tu chatbot con tu website', action: () => setIsModalWebsite(true) }
   ];
 
   return (
@@ -30,7 +32,16 @@ const TabIntegration: React.FC = () => {
           {
             socialNetworks.map((social) => {
               return (
-                <Card style={{ cursor: 'pointer', marginBottom: '15px' }} onClick={social.action}>
+                <Card 
+                  style={{ cursor: 'pointer', marginBottom: '15px' }} 
+                  onClick={() => {
+                    if(social.ruta){
+                      navigate(social.ruta);
+                    }else{
+                      social.action()
+                    }
+                  }}
+                >
                   <div style={{ display: 'flex' }}>
                     <div
                       style={{
@@ -71,77 +82,9 @@ const TabIntegration: React.FC = () => {
             Aceptar
           </Button>,
         ]}
+        width={1000}
       >
-        <Steps direction="vertical" current={stepCompleted}>
-          <Step
-            title="Paso 1: Crear una App en Facebook"
-            description={<div>
-              Ve a la sección de desarrolladores de Facebook y crea una nueva aplicación. Asigna un nombre a tu aplicación y proporciona tu correo electrónico.
-              <Button
-                type="text"
-                icon={<CheckCircleTwoTone twoToneColor={stepCompleted < 1 ? '#C4C4C4' : "#52c41a"} />}
-                style={{ borderRadius: '100%' }}
-                onClick={() => setStepCompleted(1)}
-              />
-            </div>}
-          />
-          <Step
-            title="Paso 2: Configurar el Messenger"
-            description={
-              <div>
-                Dentro del panel de tu nueva aplicación, agrega el producto Messenger y configura la URL del webhook, así como el token de verificación.
-                <Button
-                  type="text"
-                  icon={<CheckCircleTwoTone twoToneColor={stepCompleted < 2 ? '#C4C4C4' : "#52c41a"} />}
-                  style={{ borderRadius: '100%' }}
-                  onClick={() => setStepCompleted(2)}
-                />
-              </div>
-            }
-          />
-          <Step
-            title="Paso 3: Obtener credenciales de OpenAI"
-            description={
-              <div>
-                Accede a tu cuenta en la plataforma de OpenAI y obtén las credenciales necesarias para integrar tu chatbot (API key y URL del endpoint).
-                <Button
-                  type="text"
-                  icon={<CheckCircleTwoTone twoToneColor={stepCompleted < 3 ? '#C4C4C4' : "#52c41a"} />}
-                  style={{ borderRadius: '100%' }}
-                  onClick={() => setStepCompleted(3)}
-                />
-              </div>
-            }
-          />
-          <Step
-            title="Paso 4: Desplegar el Webhook"
-            description={
-              <div>
-                Despliega un servidor que maneje las solicitudes del webhook de Facebook Messenger. Este servidor debe estar configurado para interactuar con la API de OpenAI.
-                <Button
-                  type="text"
-                  icon={<CheckCircleTwoTone twoToneColor={stepCompleted < 4 ? '#C4C4C4' : "#52c41a"} />}
-                  style={{ borderRadius: '100%' }}
-                  onClick={() => setStepCompleted(4)}
-                />
-              </div>
-            }
-          />
-          <Step
-            title="Paso 5: Probar la Integración"
-            description={
-              <div>
-                Envía un mensaje a tu página de Facebook para verificar que el chatbot está respondiendo correctamente a las interacciones.
-                <Button
-                  type="text"
-                  icon={<CheckCircleTwoTone twoToneColor={stepCompleted < 5 ? '#C4C4C4' : "#52c41a"} />}
-                  style={{ borderRadius: '100%' }}
-                  onClick={() => setStepCompleted(5)}
-                />
-              </div>
-            }
-          />
-        </Steps>
+        <FacebookIntegration /> 
       </Modal>
 
       {/* Instagram */}

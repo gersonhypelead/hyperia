@@ -5,27 +5,44 @@ import Bot01 from '../../assets/img/bots/bo01.webp'
 import Bot02 from '../../assets/img/bots/bot02.webp'
 import Bot03 from '../../assets/img/bots/bot03.webp'
 import Bot04 from '../../assets/img/bots/bot04.webp'
-
+import CardPlanes from './components/CardPlanes';
+import CardPaquetes from './components/CardPaquetes';
+import { Divider }
+  from
+  "antd"
+  ;
 const Pricing: React.FC = () => {
   return (
     <>
-      <Row
+      <Divider></Divider>
+      <Row>
+        <Col xxl={24} xl={24}>
+          <CardPlanes></CardPlanes>
+        </Col>
+      </Row>
+      <Divider></Divider>
+      <Row>
+        <CardPaquetes></CardPaquetes>
+      </Row>
+      <Divider></Divider>
+      <div style={{ height: '40px' }}></div>
+      {/* <Row
         justify="center"
-        style={{ textAlign: 'center', marginBottom: '50px', marginTop: '-50px' }}
+        style={{ textAlign: 'center', marginBottom: '50px', marginTop: '-50px', background: '#fff', paddingBottom: '40px', borderRadius: '50px', boxShadow: ' 0 4px 8px rgba(12, 12, 12, 0.2)' }}
       >
         <Col>
           <h1
             style={{
               fontSize: '40px'
             }}
-          >Precios orientados a <br/>objetivos que escalan contigo</h1>
+          >Precios orientados a <br />objetivos que escalan contigo</h1>
           <div
             style={{ marginBottom: '30px' }}
           >Pruebe las funciones del plan Team durante 14 días · No se requiere tarjeta de crédito · No se necesita codificación</div>
-          <Button type='primary'>Comienza tu prueba gratuita</Button>
+          <Button className='boton-crear' type='primary'>Comienza tu prueba gratuita</Button>
         </Col>
-      </Row>
-      <Row justify="center" gutter={[16, 16]} style={{ marginTop: '20px' }}>
+      </Row> */}
+      {/* <Row justify="center" gutter={[16, 16]} style={{ marginTop: '20px' }}>
         <Col xl={6} md={6}>
           <CardPricing
             title='Basico'
@@ -45,7 +62,7 @@ const Pricing: React.FC = () => {
             mostPopular={true}
           />
         </Col>
-        {/* <Col xl={4} md={6}>
+        <Col xl={4} md={6}>
           <CardPricing
             title='Empresarial'
             subTitle='Equipo en una gran empresa.'
@@ -62,8 +79,9 @@ const Pricing: React.FC = () => {
             pricing={600}
             pricingMo={650}
           />
-        </Col> */}
-      </Row>
+        </Col>
+      </Row> */}
+
     </>
   );
 };

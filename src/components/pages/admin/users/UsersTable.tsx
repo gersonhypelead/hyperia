@@ -2,7 +2,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import {
   Table, Button, message, Form,
   Modal,
-  Space, Input, DatePicker
+  Space, Input, DatePicker,
+  Row,
+  Col,
+  Tooltip
 } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
@@ -16,7 +19,9 @@ import {
   EyeOutlined,
   EditOutlined,
   DeleteOutlined,
-  SearchOutlined
+  SearchOutlined,
+  CodeSandboxOutlined,
+  WalletOutlined
 } from '@ant-design/icons';
 import { RootState, AppDispatch } from '../../../../redux/store/store';
 import CreateUserButton from './CreateUserButton';
@@ -24,19 +29,25 @@ import EditUserModal from './EditUserModal';
 import { updateUser } from '../../../../redux/actions/users/usuariosActions';
 import type { InputRef, TableColumnType } from 'antd';
 import type { FilterDropdownProps } from 'antd/es/table/interface';
+import { useNavigate } from 'react-router-dom';
+import ViewPlanModal from './ViewPlanModal';
+import UpdatePlanModal from './UpdatePlanUserModal'
+import PlanesMensajesModal from './PlanesMensajesModal';
+import PaquetesUsuariosTable from './PaquetesUsuariosTable';
+import AuditoriaUsuarios from './AuditoriaUsuariosTable';
 
 interface DataType {
   key: string;
+  plan: string;
   nombre: string;
-  apellido_materno: any;
-  apellido_paterno: any;
+  apellido_materno: string;
+  apellido_paterno: string;
   tipo_usuario: string;
   usuario: string;
-  createdFrom: string;
-  createdTo: string;
-  updatedFrom: string;
-  updatedTo: string;
+  createdAt: string;
+  updatedAt: string;
 }
+
 type DataIndex = keyof DataType;
 const { RangePicker } = DatePicker;
 
@@ -44,98 +55,104 @@ const UsersTable: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const [editingUser, setEditingUser] = useState<any | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [form] = Form.useForm();
 
+  const [form] = Form.useForm();
+  const navigate = useNavigate();
   const [searchText, setSearchText] = useState('');
   const searchInput = useRef<InputRef>(null);
   const [filters, setFilters] = useState<Record<string, any>>({});
+  const [isPlanModalVisible, setIsPlanModalVisible] = useState(false);
+  const [isUpdatePlanModalVisible, setIsUpdatePlanModalVisible] = useState(false);
+  const [isPaquetesMensajesModalVisible, setIsPaquetesMensajesModalVisible] = useState(false);
+  const [selectedUserPlanData, setSelectedUserPlanData] = useState<any>(null);
+
+  const [selectedUserPaqueteData, setSelectedUserPaqueteData] = useState<any>(null);
+  const [isPaqueteModalVisible, setIsPaqueteModalVisible] = useState(false);
+
+  const [viewAuditoriaUserModalVisible, setViewAuditoriaUserModalVisible] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState<any | null>(null);
+
   const {
     rex_users,
     rex_meta,
     rex_loading,
     rex_sortColumn,
     rex_sortOrder,
-  } = useSelector(({ users }: any) => users);
+  } = useSelector(({ users }: RootState) => users);
 
-  console.log('meta usuario:', rex_meta)
+  const {
+    rex_paquetes_mensajes,
+  } = useSelector(({ paquetesMensajes }: RootState) => paquetesMensajes);
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        await dispatch(
-          FetchUsuariosReducer(
-            rex_meta?.page || 1,
-            rex_meta?.limit || 10,
-            rex_sortColumn,
-            rex_sortOrder
-          )
-        );
 
-        if (rex_users.length === 0) {
-          message.info('No se encontraron usuarios.');
-        }
-      } catch (error) {
-        message.error('Error al cargar los usuarios.');
-        console.error('Fetch failed:', error);
-      }
-    };
-    fetchUsers();
-  }, []);
+
 
   const handleTableChange = (
     pagination: any,
     filters: any,
     sorter: any
   ) => {
-    const order = sorter.order === 'ascend' ? 'desc' : 'asc';
-    // Obtener los filtros actuales, incluyendo los filtros de fecha
+    const order = sorter.order === 'ascend' ? 'asc' : 'desc';
     const updatedFilters = {
-      nombre: filters.nombre || '',
-      usuario: filters.usuario || '',
-      tipo_usuario: filters.tipo_usuario || '',
-      createdFrom: filters.createdFrom || '',
-      createdTo: filters.createdTo || '',
-      updatedFrom: filters.updatedFrom || '',
-      updatedTo: filters.updatedTo || '',
+      ...filters,
+      nombre: filters.nombre?.[0] || '',
+      usuario: filters.usuario?.[0] || '',
+      tipo_usuario: filters.tipo_usuario?.[0] || '',
+      createdFrom: filters.createdAt?.[0] || '',
+      createdTo: filters.createdAt?.[1] || '',
+      updatedFrom: filters.updatedAt?.[0] || '',
+      updatedTo: filters.updatedAt?.[1] || '',
     };
 
-    const sortColumn = [
-      'nombre',
-      'tipo_usuario',
-      'usuario',
-      'fecha_creacion',
-      'fecha_actualizacion'
-    ].includes(sorter.field)
-      ? sorter.field
-      : rex_sortColumn;
-
-    // Usar valores predeterminados si rex_meta es undefined
-    const currentPage = rex_meta?.page || 1;
-    const currentLimit = rex_meta?.limit || 10;
+    const sortColumn = sorter.field || rex_sortColumn;
 
     dispatch(setUsuariosSort(sortColumn, order));
     dispatch(setUsuariosPage(pagination.current));
     dispatch(FetchUsuariosReducer(
-      pagination.current || currentPage,
-      currentLimit,
+      pagination.current,
+      pagination.pageSize,
       sortColumn,
       order,
       updatedFilters
-    )).then(() => {
-      if (rex_users.length === 0) {
-        message.info('No se encontraron resultados');
-        // Restablecer a la página 1 si no hay resultados
-        dispatch(setUsuariosPage(1));
-      }
-    });
+    ));
   };
 
   const handleView = (record: any) => {
-    console.log('View:', record);
+    setSelectedUserId(record.id);
+    setViewAuditoriaUserModalVisible(true);
   };
 
   const handleEdit = (record: any) => {
-    console.log('Edit:', record);
+    setEditingUser(record);
+    setIsModalVisible(true);
+  };
+
+  const handleEditPlan = (record: any) => {
+    console.log(record)
+    const planUsuario = record.planes_usuarios[0];
+    setSelectedUserPlanData({
+      id: record.id,
+      mensajes_disponibles: planUsuario?.mensajes_disponibles || 0,
+      mensajes_enviados: planUsuario?.mensajes_enviados || 0,
+      mensajes_recibidos: planUsuario?.mensajes_recibidos || 0,
+      plan_nombre: record.planes?.plan,
+      plan_id: record.planes?.id,
+    });
+    setIsUpdatePlanModalVisible(true);
+  };
+
+  const handlePaquetesMensajes = (record: any) => {
+    const planUsuario = rex_paquetes_mensajes?.[0];
+    setSelectedUserPlanData({
+      id: record.id,
+    });
+    setIsPaquetesMensajesModalVisible(true);
+  };
+
+  const handleClosePaquetesMensajesModal = () => {
+    setIsPaquetesMensajesModalVisible(false);
+    // Aquí puedes realizar la acción de recargar la tabla
+    dispatch(FetchUsuariosReducer(rex_meta.page, rex_meta.limit, rex_sortColumn, rex_sortOrder));
   };
 
   const handleDelete = (record: any) => {
@@ -149,13 +166,15 @@ const UsersTable: React.FC = () => {
         try {
           await dispatch(updateUserStatus(record.id, false));
           message.success('Usuario desactivado correctamente');
-          dispatch(FetchUsuariosReducer(rex_meta.page, rex_meta.limit, rex_sortColumn, rex_sortOrder));
+          dispatch(FetchUsuariosReducer(rex_meta.page, rex_meta.limit, rex_sortColumn, rex_sortOrder, filters));
         } catch (error) {
           message.error('Error al desactivar el usuario');
         }
       },
     });
   };
+
+
 
   const handleReset = (clearFilters: () => void) => {
     clearFilters();
@@ -170,7 +189,7 @@ const UsersTable: React.FC = () => {
       selectedKeys,
       confirm,
       clearFilters,
-    }) => (
+    }: FilterDropdownProps) => (
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
         <Input
           ref={searchInput}
@@ -179,6 +198,10 @@ const UsersTable: React.FC = () => {
           onChange={(e) =>
             setSelectedKeys(e.target.value ? [e.target.value] : [])
           }
+          onPressEnter={() => {
+            confirm();
+            setSearchText(selectedKeys[0] as string);
+          }}
           style={{ marginBottom: 8, display: 'block' }}
         />
         <Space>
@@ -207,16 +230,11 @@ const UsersTable: React.FC = () => {
     filterIcon: (filtered: boolean) => (
       <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
     ),
-    onFilter: (value, record) => {
-      if (dataIndex === 'nombre') {
-        const fullName = `${record.nombre} ${record.apellido_paterno} ${record.apellido_materno}`.toLowerCase();
-        return fullName.includes((value as string).toLowerCase());
-      }
-      return record[dataIndex]
+    onFilter: (value, record) =>
+      record[dataIndex]
         .toString()
         .toLowerCase()
-        .includes((value as string).toLowerCase());
-    },
+        .includes((value as string).toLowerCase()),
     onFilterDropdownOpenChange: (visible) => {
       if (visible) {
         setTimeout(() => searchInput.current?.select(), 100);
@@ -225,10 +243,9 @@ const UsersTable: React.FC = () => {
   });
 
   const getDateRangeSearchProps = (
-    startDateIndex: DataIndex,
-    endDateIndex: DataIndex
+    dataIndex: 'createdAt' | 'updatedAt'
   ): TableColumnType<DataType> => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, clearFilters }: FilterDropdownProps) => (
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: FilterDropdownProps) => (
       <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
         <RangePicker
           onChange={(dates, dateStrings) => {
@@ -241,23 +258,14 @@ const UsersTable: React.FC = () => {
           <Button
             type="primary"
             onClick={() => {
+              confirm();
               const [startDate, endDate] = selectedKeys as string[];
               const newFilters = {
                 ...filters,
-                createdFrom: startDate,
-                createdTo: endDate,
+                [`${dataIndex}From`]: startDate,
+                [`${dataIndex}To`]: endDate,
               };
               setFilters(newFilters);
-
-              // Dispatch a single action with all parameters
-              dispatch(FetchUsuariosReducer(
-                rex_meta.page,
-                rex_meta.limit,
-                rex_sortColumn,
-                rex_sortOrder,
-                newFilters
-              ));
-
             }}
             icon={<SearchOutlined />}
             size="small"
@@ -266,7 +274,14 @@ const UsersTable: React.FC = () => {
             Buscar
           </Button>
           <Button
-            onClick={() => clearFilters && handleReset(clearFilters)}
+            onClick={() => {
+              clearFilters && clearFilters();
+              setFilters({
+                ...filters,
+                [`${dataIndex}From`]: undefined,
+                [`${dataIndex}To`]: undefined,
+              });
+            }}
             size="small"
             style={{ width: 90 }}
           >
@@ -276,47 +291,65 @@ const UsersTable: React.FC = () => {
       </div>
     ),
     filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />,
-    onFilter: (value, record) => {
-      if (Array.isArray(value) && value.length === 2) {
-        const [startDate, endDate] = value as string[];
-        const recordDate = moment(record[startDateIndex], 'YYYY-MM-DD HH:mm');
-        const startMoment = moment(startDate, 'YYYY-MM-DD HH:mm');
-        const endMoment = moment(endDate, 'YYYY-MM-DD HH:mm');
-        return recordDate.isBetween(startMoment, endMoment, undefined, '[]');
-      }
-      return false;
-    },
   });
 
-  const handleSave = async (values: any) => {
-    const { nombre, apellido_paterno, apellido_materno, tipo_usuario_id, usuario, email } = values;
-    const updatedUser = {
-      id: editingUser.id,
-      nombre,
-      apellido_paterno,
-      apellido_materno,
-      tipo_usuario_id,
-      usuario,
-      email,
-
-    };
-    try {
-      await dispatch(updateUser(updatedUser));
-      message.success('Usuario actualizado correctamente');
-    } catch (error) {
-      message.error('Error al actualizar el usuario');
-      console.error('Update failed:', error);
-    } finally {
-      setIsModalVisible(false);
-      form.resetFields();
-      dispatch(FetchUsuariosReducer(
-        rex_meta.page,
-        rex_meta.limit,
-        rex_sortColumn,
-        rex_sortOrder
-      ));
+  const handleViewPlan = (record: any) => {
+    const planUsuario = record.planes_usuarios[0];
+    if (record.planes && planUsuario) {
+      setSelectedUserPlanData({
+        mensajes_disponibles: record.mensajes_disponibles,
+        mensajes_enviados: record.mensajes_enviados,
+        mensajes_recibidos: record.mensajes_recibidos,
+        fecha_inicio: planUsuario.fecha_inicio || 0,
+        fecha_fin: planUsuario.fecha_fin || 0,
+        plan: record.planes.plan,
+      });
+      setIsPlanModalVisible(true);
+    } else {
+      // message.error('No se encontraron datos del plan para este usuario');
     }
   };
+
+  const handleViewPaquetes = (record: any) => {
+    const paqueteUsuario = record.paquetes_usuarios;
+    if (paqueteUsuario && paqueteUsuario.length > 0) {
+      const paqueteConUsuarioYPlan = paqueteUsuario.map((paquete: any) => {
+        const paqueteMensaje = paquete.paquetes_mensajes;
+        return {
+          ...paquete,
+          plan: record.planes.plan,
+          usuario: record.usuario,
+          nombrePaquete: paqueteMensaje ? paqueteMensaje.paquete : 'Nombre no disponible',
+        };
+      });
+
+      setSelectedUserPaqueteData(paqueteConUsuarioYPlan);
+      setIsPaqueteModalVisible(true);
+    } else {
+      // message.error('No se encontraron datos del paquete para este usuario');
+    }
+  };
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        await dispatch(
+          FetchUsuariosReducer(
+            rex_meta?.page || 1,
+            rex_meta?.limit || 10,
+            rex_sortColumn,
+            rex_sortOrder,
+            filters
+          )
+        );
+      } catch (error) {
+        message.error('Error al cargar los usuarios.');
+        console.error('Fetch failed:', error);
+      }
+    };
+    fetchUsers();
+
+  }, [dispatch, rex_meta?.page, rex_meta?.limit, rex_sortColumn, rex_sortOrder, filters,]);
 
   const columns = [
     {
@@ -329,16 +362,48 @@ const UsersTable: React.FC = () => {
       },
     },
     {
+      title: 'Plan',
+      key: 'plan',
+      render: (text: string, record: any) => (
+        <Button
+          onClick={() => handleViewPlan(record)}
+          disabled={!record.planes}
+        >
+          {record.planes?.plan || 'Sin plan'}
+        </Button>
+      ),
+    },
+    {
+      title: 'Paquetes',
+      key: 'paquetes_usuarios',
+      render: (text: string, record: any) => {
+        const ultimoPaquete = record.paquetes_usuarios && record.paquetes_usuarios.length > 0
+          ? record.paquetes_usuarios[record.paquetes_usuarios.length - 1]
+          : null;
+
+        const nombrePaquete = ultimoPaquete && ultimoPaquete.paquetes_mensajes
+          ? ultimoPaquete.paquetes_mensajes.paquete || 'Sin paquete'
+          : 'Sin paquete';
+        return (
+          <Button
+            onClick={() => handleViewPaquetes(record)}
+            disabled={!record.paquetes_usuarios}
+          >
+            {nombrePaquete}
+          </Button>
+        );
+      },
+    },
+    {
       title: 'Nombres',
       key: 'nombre',
       sorter: true,
-      dataIndex: 'nombre',
       ...getColumnSearchProps('nombre'),
-      render: (text: string, record: any) => `${record.nombre} ${record.apellido_paterno} ${record.apellido_materno}`,
+      render: (text: string, record: any) => `${record.personas.nombre} ${record.personas.apellido_paterno} ${record.personas.apellido_materno}`,
     },
     {
       title: 'Tipo Usuario',
-      dataIndex: 'tipo_usuario',
+      dataIndex: ['tipos_usuarios', 'tipo_usuario'],
       key: 'tipo_usuario',
       ...getColumnSearchProps('tipo_usuario'),
       sorter: true,
@@ -353,68 +418,128 @@ const UsersTable: React.FC = () => {
     {
       title: 'Contraseña',
       key: 'contraseña',
-      render: () => '***************', // Valor estático
+      render: () => '***************',
     },
     {
       title: 'Fecha Creación',
-      dataIndex: 'fecha_creacion',
-      key: 'fecha_creacion',
-      ...getDateRangeSearchProps('createdFrom', 'createdTo'),
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      ...getDateRangeSearchProps('createdAt'),
       sorter: true,
-      render: (fecha_creacion: string) => {
-        if (!fecha_creacion) return '-';
-        return moment(fecha_creacion).format('YYYY-MM-DD HH:mm');
-      },
+      render: (createdAt: string) => moment(createdAt).format('YYYY-MM-DD HH:mm'),
     },
     {
       title: 'Fecha Actualización',
-      dataIndex: 'fecha_actualizacion',
-      key: 'fecha_actualizacion',
-      ...getDateRangeSearchProps('updatedFrom', 'updatedTo'),
+      dataIndex: 'updatedAt',
+      key: 'updatedAt',
+      ...getDateRangeSearchProps('updatedAt'),
       sorter: true,
-      render: (fecha_actualizacion: string) => {
-        if (!fecha_actualizacion) return '-';
-        return moment(fecha_actualizacion).format('YYYY-MM-DD HH:mm');
-      },
+      render: (updatedAt: string) => moment(updatedAt).format('YYYY-MM-DD HH:mm'),
     },
     {
       title: 'Acciones',
       key: 'acciones',
       render: (text: string, record: any) => (
         <span>
-          <Button icon={<EyeOutlined />} onClick={() => handleView(record)} />
-          <Button icon={<EditOutlined />} onClick={() => handleEdit(record)} />
-          <Button icon={<DeleteOutlined />} onClick={() => handleDelete(record)} />
+          <Tooltip title="Ver Auditoria">
+            <Button icon={<EyeOutlined />} onClick={() => handleView(record)} />
+          </Tooltip>
+          <Tooltip title="Editar">
+            <Button icon={<EditOutlined />} onClick={() => handleEdit(record)} />
+          </Tooltip>
+          <Tooltip title="Plan">
+            <Button icon={<WalletOutlined />} onClick={() => handleEditPlan(record)} />
+          </Tooltip>
+          <Tooltip title="Paquete">
+            <Button icon={<CodeSandboxOutlined />} onClick={() => handlePaquetesMensajes(record)} />
+          </Tooltip>
+          <Tooltip title="Eliminar">
+            <Button icon={<DeleteOutlined />} onClick={() => handleDelete(record)} />
+          </Tooltip>
         </span>
       ),
     },
   ];
+
   return (
     <>
+      {/* <Button
+        onClick={() => {
+
+        }}
+      >
+
+      </Button> */}
       <div style={{ marginBottom: 16 }}>
         <CreateUserButton />
       </div>
-      <Button onClick={() => console.log(rex_users)} />
-      <Table
-        columns={columns}
-        dataSource={rex_users}
-        loading={rex_loading}
-        pagination={{
-          current: rex_meta.page || 1,
-          pageSize: rex_meta.limit || 10,
-          total: rex_meta.total || 0,
-          onChange: (page) => dispatch(setUsuariosPage(page)),
+      <div
+        style={{
+          // background: 'red'
         }}
-        onChange={handleTableChange}
-        rowKey="usuario"
-        locale={{ emptyText: 'No se encontraron datos.' }}
-      />
+      >
+        <Row>
+          <Col
+            xxl={24}
+            xl={24}
+            md={24}
+            sm={24}
+          >
+            <Table
+              style={{
+                position: 'relative'
+              }}
+              columns={columns}
+              dataSource={rex_users}
+              loading={rex_loading}
+              pagination={{
+                current: rex_meta.page,
+                pageSize: rex_meta.limit,
+                total: rex_meta.total,
+                onChange: (page) => dispatch(setUsuariosPage(page)),
+              }}
+              onChange={handleTableChange}
+              rowKey="id"
+              locale={{ emptyText: 'No se encontraron datos.' }}
+              scroll={{ x: 100 }}
+            />
+          </Col>
+        </Row>
+      </div>
       <EditUserModal
         visible={isModalVisible}
         onClose={() => setIsModalVisible(false)}
-        onSave={handleSave}
         user={editingUser}
       />
+      <ViewPlanModal
+        visible={isPlanModalVisible}
+        onClose={() => setIsPlanModalVisible(false)}
+        userData={selectedUserPlanData}
+      />
+      <UpdatePlanModal
+        visible={isUpdatePlanModalVisible}
+        onClose={() => {
+          setIsUpdatePlanModalVisible(false);
+          setSelectedUserPlanData(null);
+        }}
+        userData={selectedUserPlanData}
+      />
+      <PlanesMensajesModal
+        visible={isPaquetesMensajesModalVisible}
+        onClose={handleClosePaquetesMensajesModal}
+        userData={selectedUserPlanData}
+      />
+      <PaquetesUsuariosTable
+        visible={isPaqueteModalVisible}
+        onClose={() => setIsPaqueteModalVisible(false)}
+        userData={selectedUserPaqueteData}
+      />
+      <AuditoriaUsuarios
+        visible={viewAuditoriaUserModalVisible}
+        onClose={() => setViewAuditoriaUserModalVisible(false)}
+        userId={selectedUserId}
+      />
+
     </>
   );
 };

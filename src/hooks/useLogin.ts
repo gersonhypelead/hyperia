@@ -12,15 +12,13 @@ export const useLogin = () => {
     setError(null);
     try {
       const result = await login(credentials);
-      console.log("resuñtados de logeo" , result)
+
       setData(result);
-      if (result.data[0]?.token) {
-        localStorage.setItem('token', result.data[0]?.token);
-        localStorage.setItem('id_usuario', result.data[0]?.user.id);
-       /*  localStorage.setItem('usuario', credentials.usuario);
-        localStorage.setItem('contrasenia', credentials.contrasena); */
+      if (result.data?.token) {
+        localStorage.setItem('token', result.data?.token);
+
       }
-      console.log(localStorage.getItem("usuario") , "este es el usuario guardado")
+
     } catch (error: any) {
       setError(error.message);
       throw new Error('Registration failed');

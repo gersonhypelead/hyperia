@@ -3,7 +3,6 @@ import config from '../config'
 import fetchWithIP from '../redux/actions/utils/fetchHeaders';
 
 export const login = async (credentials: userCredential) => {
-  console.log("login de authservice , atug")
   try {
    /*  const response = await fetch(`${config.API_URL}auth/login`, {
       method: 'POST',
@@ -29,12 +28,12 @@ export const login = async (credentials: userCredential) => {
 
 export const register = async (userInfo: userRegister) => {
   try {
-    const response = await fetch(`${config.API_URL}auth`, {
+    const response = await fetchWithIP(`auth`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      mode: 'cors',
-      body: JSON.stringify(userInfo),
-    });
+      
+    },
+    userInfo
+    );
     if (!response.ok) throw new Error('Registration failed');
     return response.json();
   } catch (error) {

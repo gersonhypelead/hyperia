@@ -8,28 +8,39 @@ interface FetchOptions extends RequestInit {
 
 async function fetchWithIP(endpoint: string, options: FetchOptions = {}, data?: any): Promise<any> {
     const url = `${config.API_URL}${endpoint}`;
-    console.log(url, " esta es la url", data);
-    /*     const ip = await getIp(); */
+  
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
     const headers: HeadersInit = {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem("token")}`,
+        'Timezone': timeZone, 
+  
     };
-    console.log(options.method, " ?#################3")
     if (options.method !== 'GET') {
-        console.log("ENTREO =======")
         const ip = await getIp();
         headers['ip'] = ip;
     }
+    const isFormData = data instanceof FormData;
+
+
+    let body: any;
+    if (data instanceof FormData) {
+        body = data;
+    } else if (data && options.method !== 'GET') {
+        headers['Content-Type'] = 'application/json';
+        body = JSON.stringify(data);
+    }
+
 
     const response = await fetch(url, {
-        method: options.method || "POST",
-        headers,
-        body: data && options.method !== 'GET' ? JSON.stringify(data) : undefined,
+        method: options.method || "POST" || "PUT",
+         headers,
+         body,
     });
-
-    return response
+    return response;
 }
 
 
+
+  
 export default fetchWithIP;

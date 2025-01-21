@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Collapse, Checkbox, Spin, Button, Row, Col, message } from 'antd';
+import { Collapse, Checkbox, Spin, Button, Row, Col, message, Input, Modal, Form, Select } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
-import { FetchPermisosTipoUsuario, createOrUpdatePermisosUsuario } from '../../../../redux/actions/permisos/permisosUsuariosActions';
+import { FetchPermisosTipoUsuario, createOrUpdatePermisosUsuario, CreatePermisoReducer } from '../../../../redux/actions/permisos/permisosUsuariosActions';
 import { RootState, AppDispatch } from '../../../../redux/store/store';
 
 const { Panel } = Collapse;
@@ -16,6 +16,8 @@ const PermisosPage: React.FC = () => {
   const { permisos, loading } = useSelector((state: RootState) => state.permisosTiposUsuarios);
 
   const [localPermisos, setLocalPermisos] = useState<any[]>([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [form] = Form.useForm();
 
   useEffect(() => {
     dispatch(FetchPermisosTipoUsuario(tipoUsuarioIdNumber));
@@ -39,17 +41,15 @@ const PermisosPage: React.FC = () => {
     const updatedPermisos = localPermisos.map((tipoPermiso) =>
       tipoPermiso.id === tipoPermisoId
         ? {
-            ...tipoPermiso,
-            permisos: tipoPermiso.permisos.map((permiso: any) => ({
-              ...permiso, seleccionado: selected
-            })),
-          }
+          ...tipoPermiso,
+          permisos: tipoPermiso.permisos.map((permiso: any) => ({
+            ...permiso, seleccionado: selected
+          })),
+        }
         : tipoPermiso
     );
     setLocalPermisos(updatedPermisos);
   };
-
-  
 
   const handleSavePermisos = () => {
     const permisoIds = localPermisos.flatMap((tipoPermiso) =>
@@ -68,11 +68,41 @@ const PermisosPage: React.FC = () => {
     message.success('Permisos guardados exitosamente');
   };
 
+  const handleCreatePermiso = async (values: any) => {
+    try {
+      const newPermiso = await dispatch(CreatePermisoReducer(values));
+      message.success('Permiso creado exitosamente');
+      setIsModalVisible(false);
+      form.resetFields();
+
+      // Update localPermisos with the new permiso
+      const updatedPermisos = localPermisos.map(tipoPermiso => {
+        if (tipoPermiso.id === newPermiso.tipo_permiso_id) {
+          return {
+            ...tipoPermiso,
+            permisos: [...tipoPermiso.permisos, {
+              id: newPermiso.id,
+              permiso: newPermiso.descripcion,
+              seleccionado: false
+            }]
+          };
+        }
+        return tipoPermiso;
+      });
+      setLocalPermisos(updatedPermisos);
+    } catch (error) {
+      message.error('Error al crear el permiso: ');
+    }
+  };
+
   return (
     <div>
       <Row justify="space-between" style={{ marginBottom: '20px' }}>
         <Col>
           <Button onClick={() => navigate(-1)}>Volver</Button>
+        </Col>
+        <Col>
+          <Button onClick={() => setIsModalVisible(true)} style={{ marginLeft: '80rem' }}>Crear Permiso</Button>
         </Col>
         <Col>
           <Button type="primary" onClick={handleSavePermisos}>Guardar Cambios</Button>
@@ -114,6 +144,49 @@ const PermisosPage: React.FC = () => {
           })}
         </Collapse>
       )}
+      <Modal
+        title="Crear Nuevo Permiso"
+        visible={isModalVisible}
+        onOk={() => form.submit()}
+        onCancel={() => setIsModalVisible(false)}
+      >
+        <Form form={form} layout="vertical" onFinish={handleCreatePermiso}>
+          <Form.Item
+            name="slug"
+            label="Slug"
+            rules={[{ required: true, message: 'Por favor ingrese el slug' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="ruta"
+            label="Ruta"
+            rules={[{ required: true, message: 'Por favor ingrese la ruta' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="descripcion"
+            label="Descripción"
+            rules={[{ required: true, message: 'Por favor ingrese la descripción' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="tipo_permiso_id"
+            label="Tipo de Permiso"
+            rules={[{ required: true, message: 'Por favor seleccione el tipo de permiso' }]}
+          >
+            <Select>
+              {localPermisos.map((tipoPermiso) => (
+                <Select.Option key={tipoPermiso.id} value={tipoPermiso.id}>
+                  {tipoPermiso.tipo_permiso}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 };

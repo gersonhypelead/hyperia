@@ -1,0 +1,56 @@
+.ant-card.no-border-radius {
+  border-radius: 0px !important;
+}
+
+.ant-card.with-border-radius {
+  border-radius: 10px !important;
+}
+
+.ant-avatar-string .big-font-size {
+  font-size: 36px !important;
+}
+
+.edit-button {
+  border: 1px solid #BED1FF;
+  color: #355CC0;
+  border-radius: 4px !important;
+  height: 60px;
+  margin-top: 30px;
+  margin-bottom: -46px;
+  font-size: 16px;
+}
+.cancel-button {
+  border: 1px solid #cf4033;
+  color: #cf4033;
+  border-radius: 4px !important;
+  height: 60px;
+  margin-top: 30px;
+  margin-bottom: -46px;
+  margin-right: -255px;
+  font-size: 16px;
+}
+
+.form-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.form-item label {
+  width: 150px;
+  font-weight: bold;
+}
+
+.form-item input,
+.form-item .ant-select {
+  flex: 1;
+}
+
+.field-display {
+  font-size: 16px;
+}
+
+.ant-input-affix-wrapper .custom-profile-input {
+  margin-left: 20px !important;
+  width: 80% !important;
+}

@@ -9,41 +9,55 @@ import {
   RobotOutlined,
   DollarOutlined,
   TeamOutlined,
-  UsergroupAddOutlined 
+  UsergroupAddOutlined,
+  ScheduleOutlined,
+  BarChartOutlined
 } from '@ant-design/icons';
 import { Layout, Menu, theme, Button, Avatar } from 'antd';
 import { Link } from 'react-router-dom';
 import Navbar from '../navbar/navbar';
 import FloatMessage from '../floatMessage/FloatMessage';
+import { useSelector } from 'react-redux';
 
 const { Content, Footer, Sider } = Layout;
-
-const items = [
-  { label: 'Home', icon: HomeOutlined, path: '/home' },
-  { label: 'Chats', icon: WechatWorkOutlined, path: '/chats' },
-  { label: 'Administrador', icon: WechatOutlined, path: '/administrador' },
-  { label: 'Nuestros Chats', icon: RobotOutlined, path: '/nuestros-chats' },
-  { label: 'Precios', icon: DollarOutlined, path: '/precios' },
-  { label: 'Usuarios', icon: TeamOutlined, path: '/usuarios' },
-  { label: 'Tipos de Usuarios', icon: UsergroupAddOutlined, path: '/tipos-usuarios' },
-  
-].map((item, index) => ({
-  key: String(index + 1),
-  icon: React.createElement(item.icon),
-  label: <Link to={item.path}>{item.label}</Link>,
-  path: item.path,
-}));
 
 interface LayoutProps {
   children: ReactNode;
 }
 
 const Sidebar: React.FC<LayoutProps> = ({ children }) => {
+
+  const {
+    rex_user_auth
+  } = useSelector(({ auth }: any) => auth);
+
   const [collapsed, setCollapsed] = useState(false);
 
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
+  const items = [
+    { key: "1", label: <Link to={'/home'}>Home</Link>, icon: React.createElement(HomeOutlined), path: '/home', slug: 'show.module.home' },
+    { key: "2", label: <Link to={'/crear-chatbot'}>Crear ChatBot</Link>, icon: React.createElement(HomeOutlined), path: '/crear-chatbot', slug: 'show.module.create-bots' },
+    { key: "4", label: <Link to={'/chats'}>Chats</Link>, icon: React.createElement(WechatWorkOutlined), path: '/chats', slug: 'show.module.chats' },
+    { key: "12", label: <Link to={'/analytics'}>Analytics</Link>, icon: React.createElement(BarChartOutlined), path: '/analytics', slug: 'show.module.analytics' },
+    { key: "5", label: <Link to={'/administrador'}>Administrador</Link>, icon: React.createElement(WechatOutlined), path: '/administrador', slug: 'show.module.adm-bots' },
+    { key: "6", label: <Link to={'/nuestros-chats'}>Nuestros Chats</Link>, icon: React.createElement(RobotOutlined), path: '/nuestros-chats', slug: 'show.module.marketplace-bots' },
+    { key: "7", label: <Link to={'/precios'}>Precios</Link>, icon: React.createElement(DollarOutlined), path: '/precios', slug: 'show.module.pricing' },
+    { key: "8", label: <Link to={'/usuarios'}>Usuarios</Link>, icon: React.createElement(TeamOutlined), path: '/usuarios', slug: 'show.module.adm-users' },
+    { key: "9", label: <Link to={'/tipos-usuarios'}>Tipos de Usuarios</Link>, icon: React.createElement(UsergroupAddOutlined), path: '/tipos-usuarios', slug: 'show.module.adm-typeusers' },
+    { key: "10", label: <Link to={'/planes'}>Planes </Link>, icon: React.createElement(ScheduleOutlined), path: '/planes', slug: 'show.module.adm-plans' },
+    { key: "11", label: <Link to={'/paquetes-mensajes'}>Paquetes de Mensajes </Link>, icon: React.createElement(ScheduleOutlined), path: '/paquetes-mensajes', slug: 'show.module.adm-plans' },
+    { key: "13", label: <Link to={'/prueba'}>Prueba</Link>, icon: React.createElement(ScheduleOutlined), path: '/prueba', slug: 'show.module.adm-plans' },
+    // { label: 'Chats V2', icon: WechatWorkOutlined, path: '/chatsv2' },
+  ]
+    .filter(item => rex_user_auth.permisos.some((permiso: any) => permiso.slug === item.slug));
+  // .map(({ key, label, icon: Icon, path }) => ({
+  //   key,
+  //   label: <Link to={path}>{label}</Link>,
+  //   icon: <Icon />
+  // }));
 
   return (
     <Layout>
@@ -74,7 +88,7 @@ const Sidebar: React.FC<LayoutProps> = ({ children }) => {
           }}
         >
           <Avatar size={30} icon={<UserOutlined />} /> <br />
-          <span>Usuario Prueba</span>
+          <span>{rex_user_auth?.personas?.nombre + " " + rex_user_auth?.personas?.apellido_paterno}</span>
         </div>
         <Menu
           theme="light"
@@ -84,14 +98,14 @@ const Sidebar: React.FC<LayoutProps> = ({ children }) => {
         />
       </Sider>
       <Layout>
-        <Navbar colorBgContainer={colorBgContainer} />
+        <Navbar colorBgContainer={"white"} />
         <Content
           style={{
             margin: '24px 16px',
             padding: 24,
             minHeight: 280,
             // background: colorBgContainer,
-            borderRadius: borderRadiusLG,
+            borderRadius: 'borderRadiusLG',
           }}
         >
           {children}
@@ -99,7 +113,7 @@ const Sidebar: React.FC<LayoutProps> = ({ children }) => {
         <Footer style={{ textAlign: 'center' }}>
           ©{new Date().getFullYear()}
         </Footer>
-        <FloatMessage />
+        <FloatMessage supportChat={true} />
       </Layout>
     </Layout>
   );

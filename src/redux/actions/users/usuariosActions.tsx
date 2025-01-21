@@ -1,7 +1,6 @@
 import { Dispatch } from 'redux';
 import { createAction } from '@reduxjs/toolkit';
 import config from '../../../config';
-
 import {
   FETCH_USUARIOS_FAILURE_USERS,
   FETCH_USUARIOS_REQUEST_USERS,
@@ -16,12 +15,17 @@ import {
   UPDATE_USER_STATUS_FAILURE_USERS,
   CREATE_USER_REQUEST,
   CREATE_USER_SUCCESS,
-  CREATE_USER_FAILURE
+  CREATE_USER_FAILURE,
+  UPDATE_PLANES_FAILURE,
+  UPDATE_PLANES_REQUEST,
+  UPDATE_PLANES_SUCCESS,
+  PAQUETES_USERS_REQUEST,
+  PAQUETES_USERS_FAILURE,
+  PAQUETES_USERS_SUCCESS
 } from '../../../constantes/admin/users/Users';
 import fetchWithIP from '../utils/fetchHeaders';
 
- export interface UserData {
-  id: number;
+export interface UserData {
   nombre?: string;
   apellido_paterno?: string;
   apellido_materno?: string;
@@ -29,13 +33,14 @@ import fetchWithIP from '../utils/fetchHeaders';
   tipo_usuario_id?: number;
   email?: string;
   estado?: boolean;
+  contrasena?:string;
 }
 
 export const FetchUsuariosReducer = (
   page: number = 1, 
   limit: number = 10, 
-  sortColumn: string, 
-  sortOrder: string, 
+  sortColumn: string = 'usuario', 
+  sortOrder: string = 'asc', 
   filters?: { 
     nombre?: string, 
     usuario?: string, 
@@ -43,7 +48,8 @@ export const FetchUsuariosReducer = (
     createdFrom?: string, 
     createdTo?: string, 
     updatedFrom?: string, 
-    updatedTo?: string }
+    updatedTo?: string 
+  }
 ) => {
   return async (dispatch: Dispatch) => {
     dispatch({ type: FETCH_USUARIOS_REQUEST_USERS });
@@ -55,84 +61,73 @@ export const FetchUsuariosReducer = (
         sortOrder,
       });
 
-      if (filters?.updatedFrom) queryParams.append('createdFrom', filters.updatedFrom);
-      if (filters?.updatedTo) queryParams.append('createdTo', filters.updatedTo);
-      if (filters?.createdFrom) queryParams.append('createdFrom', filters.createdFrom);
-      if (filters?.createdTo) queryParams.append('createdTo', filters.createdTo);
-      if (filters?.nombre) queryParams.append('nombre', filters.nombre);
-      if (filters?.usuario) queryParams.append('usuario', filters.usuario);
-      if (filters?.tipo_usuario) queryParams.append('tipo_usuario', filters.tipo_usuario);
-
-      const response = await fetch(`${config.API_URL}auth?${queryParams.toString()}`);
+      if (filters) {
+        Object.entries(filters).forEach(([key, value]) => {
+          if (value) queryParams.append(key, value);
+        });
+      }
+      const response = await fetchWithIP(`auth?${queryParams.toString()}` , {method:"GET"});
       const data = await response.json();
-
-      dispatch({
-        type: FETCH_USUARIOS_SUCCESS_USERS,
-        payload: {
-          usuarios: data.data,
-          meta: {
-            ...data.meta,
-            page: page,
-            limit: limit
+      if (data.respuesta) {
+        dispatch({
+          type: FETCH_USUARIOS_SUCCESS_USERS,
+          payload: {
+            usuarios: data.data,
+            meta: data.meta
           }
-        }
-      });
+        });
+      } else {
+        throw new Error(data.mensaje || 'Error fetching usuarios');
+      }
     } catch (error) {
-      dispatch({ type: FETCH_USUARIOS_FAILURE_USERS, error });
+      dispatch({ 
+        type: FETCH_USUARIOS_FAILURE_USERS, 
+        error: error instanceof Error ? error.message : 'An unknown error occurred' 
+      });
     }
   };
 };
 
-// Acción para cambiar la página de usuarios
+// Existing action creators
 export const setUsuariosPage = (page: number) => ({
   type: SET_USUARIOS_PAGE_USERS,
   payload: page,
- 
 });
-// Acción para cambiar el orden de los usuarios
+
 export const setUsuariosSort = (sortColumn: string, sortOrder: string) => ({
   type: SET_USUARIOS_SORT_USERS,
   payload: { sortColumn, sortOrder },
 });
 
-export const updateUser = (userData: UserData) => {
+
+export const updateUser = (id: number, userData: UserData) => {
   return async (dispatch: Dispatch) => {
     dispatch({ type: UPDATE_USER_REQUEST_USERS });
-
-    console.log('Datos que se están actualizando:', userData);
-
     try {
-      const response = await fetchWithIP(`auth/${userData.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          nombre: userData.nombre,
-          apellido_paterno: userData.apellido_paterno,
-          apellido_materno: userData.apellido_materno,
-          tipo_usuario_id: userData.tipo_usuario_id, // Asegúrate de que este campo sea necesario
-          usuario: userData.usuario,
-          email: userData.email // Asegúrate de que este campo sea necesario
-        }),
-      });
 
-      const data = await response.json()
+      // Configurar correctamente la solicitud PUT
+      // const response = await fetchWithIP(`auth/${id}`, {
+      const response = await fetchWithIP(`auth`, {
+        method: 'PUT'},
+        userData
+      );
+
+      // Asegurarse de que se maneje la respuesta correctamente
       if (!response.ok) {
-        const errorData = await response.json(); // Obtener detalles del error si es posible
-        throw new Error(errorData.message || 'Error en la actualización'); // Mostrar mensaje de error si existe
+        const errorData = await response.json(); // Obtener detalles del error si hay
+        throw new Error(errorData.message || 'Error en la actualización');
       }
 
-      const updatedUser = data.data[0]; // Asegúrate de que la estructura de datos sea correcta
-      // const data = await response.json();
-      // const updatedUser = data.data[0];
+      const data = await response.json();
+
+      const updatedUser = data.data; // Verifica la estructura de los datos de la API
 
       dispatch({
         type: UPDATE_USER_SUCCESS_USERS,
         payload: updatedUser,
       });
 
-      console.log('payload:', updatedUser);
+      console.log('Usuario actualizado:', updatedUser);
     } catch (error: any) {
       dispatch({
         type: UPDATE_USER_FAILURE_USERS,
@@ -162,19 +157,15 @@ export const createUser = (userData: any) => async (dispatch: any) => {
   }
 };
 
-
 export const updateUserStatus = (id: number, estado: boolean) => {
   return async (dispatch: Dispatch) => {
     dispatch({ type: UPDATE_USER_STATUS_REQUEST_USERS });
 
     try {
-      const response = await fetch(`${config.API_URL}auth/${id}/status`, {
+
+      const response = await fetchWithIP(`auth/${id}/status`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ estado }),  
-      });
+      }, { estado });  
 
       if (!response.ok) {
         throw new Error('Error al actualizar el estado del usuario');
@@ -188,7 +179,6 @@ export const updateUserStatus = (id: number, estado: boolean) => {
         payload: updatedUser,
       });
 
-      console.log('Estado actualizado:', updatedUser);
     } catch (error) {
       dispatch({
         type: UPDATE_USER_STATUS_FAILURE_USERS,
@@ -196,4 +186,43 @@ export const updateUserStatus = (id: number, estado: boolean) => {
       });
     }
   };
+};
+
+export const UpdatePlanUserReducer = (userData: any) => async (dispatch: any) => {
+  dispatch(UPDATE_PLANES_REQUEST());
+  try {
+    const response = await fetchWithIP(`planes-usuarios`, {
+      method: 'POST',
+    },
+      userData,
+    );
+    const data = response.json()
+    if (response.ok) {
+      dispatch(UPDATE_PLANES_SUCCESS(data));
+    } else {
+      dispatch(UPDATE_PLANES_FAILURE('Error al editar plan'));
+    }
+  } catch (error) {
+    dispatch(UPDATE_PLANES_FAILURE('Error de red al editar plan'));
+  }
+};
+
+export const PaquetesUsuariosReducer = (userData: any) => async (dispatch: any) => {
+  dispatch(PAQUETES_USERS_REQUEST());
+  try {
+    const response = await fetchWithIP(`paquetes-usuarios`, {
+      method: 'POST',
+    },
+      userData,
+    );
+
+    const data = response.json()
+    if (response.ok) {
+      dispatch(PAQUETES_USERS_SUCCESS(data));
+    } else {
+      dispatch(PAQUETES_USERS_FAILURE('Error al crear el usuario'));
+    }
+  } catch (error) {
+    dispatch(PAQUETES_USERS_FAILURE('Error de red al crear el usuario'));
+  }
 };

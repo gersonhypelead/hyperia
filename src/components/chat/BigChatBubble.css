@@ -1,0 +1,41 @@
+.big-chat-bubble {
+  max-width: 60%; /* Ancho máximo de la burbuja */
+  min-width: fit-content; /* Se ajusta al contenido mínimo */
+  width: fit-content; /* Ajusta el ancho al contenido */
+  padding: 10px 15px;
+  border-radius: 20px;
+  margin: 5px 10px; /* Margen uniforme alrededor de la burbuja */
+  font-size: 16px;
+  line-height: 1.4;
+  position: relative;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1); /* Sombra para darle profundidad */
+  word-wrap: break-word; /* Ajuste de palabras largas */
+}
+
+/* Ajuste de los párrafos dentro de la burbuja */
+.big-chat-bubble p {
+  margin: 0;
+}
+
+/* Estilos para la burbuja del emisor (usuario) */
+.big-chat-bubble.emisor {
+  background-color: #0084ff;
+  color: white;
+  align-self: flex-end;
+  border-bottom-right-radius: 0; /* Esquina inferior derecha cuadrada */
+  text-align: right; /* Texto alineado a la derecha */
+  margin-left: auto; /* Burbuja pegada a la derecha */
+  margin-bottom: 10px;
+}
+
+/* Estilos para la burbuja del receptor (bot) */
+.big-chat-bubble.receptor {
+  background-color: #e5e5ea;
+  color: black;
+  align-self: flex-start;
+  border-bottom-left-radius: 0; /* Esquina inferior izquierda cuadrada */
+  text-align: left; /* Texto alineado a la izquierda */
+  margin-right: auto; /* Burbuja pegada a la izquierda */
+  margin-bottom: 10px;
+}
+

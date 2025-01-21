@@ -1,10 +1,13 @@
 import React from 'react';
 import AppRoutes from './routes/Route';
 import './index.css'
-import {Provider} from 'react-redux'
-import generateStore, {history} from './redux/store/index';
+import { Provider } from 'react-redux'
+import generateStore, { history } from './redux/store/index';
 import { ConnectedRouter } from 'connected-react-router'
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import {
+  App as AppAntd
+} from "antd";
 // import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
 
 // CONFIGURAR EL IDIOMA PARA ANTD
@@ -25,7 +28,9 @@ const App: React.FC = () => {
 
         {/* <ConnectedRouter history={history}> */}
         <BrowserRouter>
-          <AppRoutes />
+          <AppAntd>
+            <AppRoutes />
+          </AppAntd>
         </BrowserRouter>
         {/* </ConnectedRouter> */}
       </Provider>

@@ -25,7 +25,7 @@ const CardTokens: React.FC<CardTokensProps> = ({
         border: 'none',
         height: '110px',
         display: 'flex',
-        alignItems: 'center',
+        // alignItems: 'center',
         justifyContent: 'space-between',
         padding: '2px',
       }}
@@ -45,10 +45,10 @@ const CardTokens: React.FC<CardTokensProps> = ({
           </Title>
         </div>
       </Space>
-      <Text
+      {/*<Text
         style={{
-          backgroundColor: '#e6f7ff',
-          color: '#1890ff',
+          backgroundColor: 'rgba(34, 242, 255, 0.3)',
+          color: '#0C5257',
           padding: '4px 60px',
           borderRadius: '4px',
           fontWeight: 500,
@@ -57,7 +57,7 @@ const CardTokens: React.FC<CardTokensProps> = ({
         }}
       >
         {tokens} tokens
-      </Text>
+      </Text>*/}
     </Card>
   );
 };

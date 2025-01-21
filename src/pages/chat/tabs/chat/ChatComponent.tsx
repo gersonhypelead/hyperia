@@ -57,31 +57,18 @@ const ChatComponent: React.FC = () => {
 
       <Row>
         <Col md={12} xl={12}>
-          <div
+          <div className='contenedor-chat'
             style={{
               width: '95%',
               height: '600px',
               // background: 'red',
-              borderRadius: '10px',
+              borderRadius: '25px',
               position: 'relative',
               border: '1px solid #C4C4C4'
             }}
           >
             {/* HEAD */}
-            <div
-              style={{
-                display: 'flex',
-                paddingLeft: '20px',
-                paddingRight: '20px',
-                paddingTop: '10px',
-                paddingBottom: '10px',
-                background: '#03A9F4',
-                borderTopLeftRadius: '10px',
-                borderTopRightRadius: '10px',
-                marginBottom: '10px',
-                color: 'white',
-                alignItems: 'center'
-              }}
+            <div className='header-chat'
             >
               <div
                 style={{
@@ -89,7 +76,6 @@ const ChatComponent: React.FC = () => {
                 }}
               >
                 <Avatar size={64} icon={<UserOutlined />} />
-                <p>------------------------¿¿¿¿</p>
               </div>
               <div>
                 <div style={{ fontWeight: 'bold', fontSize: '18px', lineHeight: '1' }}>
@@ -125,7 +111,6 @@ const ChatComponent: React.FC = () => {
               </div>
             </div>
 
-            <p>----AAA-------¿¿¿¿</p>
             {/* BOTTOM */}
             <div
               style={{
@@ -190,7 +175,7 @@ const ChatComponent: React.FC = () => {
 
           </div>
         </Col>
-        <p>--MITAD¿</p>
+
         <Col md={12} xl={12}>
           <Space direction="vertical">
             <Collapse
@@ -199,7 +184,7 @@ const ChatComponent: React.FC = () => {
               items={[
                 {
                   key: '1',
-                  label: 'This panel can only be collapsed by clicking text',
+                  label: 'Thdsais panel can only be collapsed by clicking text',
                   children: <p>{text}</p>,
                 },
               ]}
@@ -210,7 +195,7 @@ const ChatComponent: React.FC = () => {
               items={[
                 {
                   key: '1',
-                  label: 'This panel can only be collapsed by clicking icon',
+                  label: 'This ',
                   children: <p>{text}</p>,
                 },
               ]}
@@ -227,7 +212,6 @@ const ChatComponent: React.FC = () => {
             />
           </Space>
         </Col>
-        <p>------------------------¿¿¿¿</p>
       </Row>
     </>
   );

@@ -57,10 +57,10 @@ const TabAnalytics: React.FC = () => {
 
   return (
     <>
-      <Row style={{ height: '400px' }} gutter={[16, 16]}>
-        <Col xl={12} md={12}>
-          <Card>
-            <div style={{ height: '400px' }}>
+      <Row style={{height: '100%'}} gutter={[16, 16]}>
+        {/* <Col xl={12} md={12}>
+          <Card style={{ height: '400px', position: 'absolute' }}>
+            <div >
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   width={500}
@@ -84,10 +84,10 @@ const TabAnalytics: React.FC = () => {
               </ResponsiveContainer>
             </div>
           </Card>
-        </Col>
+        </Col> */}
         <Col xl={12} md={12}>
           <Card>
-            <PieAnalytic />
+            {/* <PieAnalytic /> */}
           </Card>
         </Col>
       </Row>

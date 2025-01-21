@@ -1,23 +1,44 @@
 import React, { useState } from 'react';
 import {
-  Button, Col, Divider, Input, Row, Select,
-  Steps, theme, Modal, Card, Switch,
-  TimePicker
+  Button,
+  Col,
+  Divider,
+  Input,
+  Row,
+  Select,
+  Steps,
+  theme,
+  Modal,
+  Card,
+  Switch,
+  TimePicker,
+  Skeleton,
 } from 'antd';
-import { QuestionCircleOutlined } from '@ant-design/icons';
+import moment from 'moment';
+import dayjs from 'dayjs';
+
+import {
+  QuestionCircleOutlined,
+  PlusOutlined
+} from '@ant-design/icons';
 import type { SelectProps } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux';
 import {
   GetDataChatsBotsHomeReducer,
-  UpdateVarMundoReducer
+  SelectBotReducer,
+  UpdateVarMundoReducer,
 } from '../../../../redux/actions/home/Home';
 import { AppDispatch, RootState } from '../../../../redux/store/store';
-import { submitFormData, sendFormDataToEndpoint } from '../../../../redux/actions/home/homeActions';
+import {
+  updateFormData,
+  updateChatbotAndSchedules,
+} from '../../../../redux/actions/home/homeActions';
 import { notification } from 'antd';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form, Field, ErrorMessage, useFormikContext } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
+import { GetConversationReducer, ResetBotSelectedReducer, ResetConversationReducer } from '../../../../redux/actions/chatBots/Chat/Chat';
 
 type LabelRender = SelectProps['labelRender'];
 
@@ -49,60 +70,86 @@ const ValidationSchema = Yup.object().shape({
 const TabCreateEdit: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
+  const { rex_chat_selecccionado } = useSelector(({ home }: RootState) => home);
 
   const {
     rex_chatsbots,
-    rex_mundo
+    rex_chatbot_seleccionado
   } = useSelector(({ home }: any) => home);
-
 
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
 
-  const initialValues = {
-    chatName: '',
-    activityHours: '',
-    chatbotDescription: '',
-    welcomeMessage: '',
-    responseTime: '',
-    typingAnimation: true,
-    missionBot: '',
-    visionBot: '',
-    missionCompany: '',
-    visionCompany: '',
-    benefits: '',
-    targetAudience: '',
-    gptEngine: '1',
-    retrasoRespuesta: 0,
-    comportamiento: ` // Este es un comentario y la IA no lo leerá.
-// Puede reemplazar el siguiente contenido con la información de su propia empresa o
-// explorar el mercado en busca de una variedad de bots que incluyan indicaciones del sistema básico listas para usar.
-
-// RECUERDE: cree sus indicaciones de manera iterativa (un cambio a la vez). Realice un cambio y luego pruébelo. Etc...
-
-// Reemplace estos marcadores de posición con su propia información
-Usted es un asistente útil para {INSERT_YOUR_COMPANY_NAME} y su nombre es {INSERT_AGENT_NAME}.
-
-Su trabajo es responder las preguntas que le envían los clientes. Para ello, se le han dado instrucciones sobre cómo acceder a la base de conocimientos.
-
-Si no tiene la respuesta a una pregunta y está en la base de conocimientos, infórmele al usuario que no tiene la respuesta a la pregunta. Puede decir algo como: "Hum, no estoy seguro".
-
-Mantenga sus respuestas lo más concisas posible sin dejar de brindar la información requerida.
-
-No interrumpa el carácter.
-
-Evite responder preguntas que no sean relevantes para el negocio.
-
-// Programación de citas basada en enlaces (elimine el comentario de la línea siguiente, si es necesario)
-// Si un usuario desea programar una reunión o reservar una cita, envíelo a este enlace: {YOUR_CALENDLY_LINK}
-
-// Los mensajes deben estar escritos en inglés y luego puede solicitarle al agente que los traduzca (si es necesario para su caso de uso)
-// Este ejemplo maneja todos los idiomas
-Hable con el usuario en el idioma en el que le habla.
-
-// O puede ser más específico:
-// Este mensaje está en inglés, pero quiero que interactúe con los usuarios en español`
+  const initialActivityHours = (day: string) => {
+    const activity = rex_chatbot_seleccionado?.horariosActividad.find(
+      (a: any) => a.dia === day
+    );
+    if (activity) {
+      const [start, end] = activity.horario.split(' - '); // Dividimos el string
+      return [dayjs(start, 'HH:mm'), dayjs(end, 'HH:mm')]; // Convertimos las partes en objetos dayjs
+    }
+    return null;
   };
+
+  const comportamientotext = `Aviso del sistema base (instrucciones personalizadas) *
+  
+  // Este es un comentario interno y la Inteligencia Artificial que alimenta los Chatbots no la tendrá en cuenta.
+  
+  // Puedes reemplazar el siguiente contenido con la información de tu propio negocio, empresa o proyecto.
+  
+  // Te recomendamos explorar el mercado e investigar a tus competidores para encontrar Chatbots que incluyan indicaciones que te sirvan de referencia para crear el tuyo propio.
+  
+  // RECUERDA: crea tus indicaciones de manera individual, es decir, un cambio cada vez. Realiza el cambio que necesites, pruébalo y si toda funciona como quieres, aplica un nuevo cambio.
+  
+  // Sustituye la información entre 0 con tu propia información:
+  
+  Eres es un Chatbot para (INTRODUCE_ NOMBRE_NEGOCIO) y tu nombre es (INTRODUCE NOMBRE CHATBOT) .
+  
+  Tu trabajo es responder las preguntas que envían los clientes. Para ello, se te han dado instrucciones sobre cómo acceder a la base de conocimientos.
+  
+  Si no tienes la respuesta a una pregunta y está en la base de conocimientos, comunica al usuario que no tienes respuesta a su pregunta. Puedes decir algo como: "Hum, no estoy seguro".
+  
+  Mantén tus respuestas lo más concisas posibles sin dejar de facilitar la información solicitada.
+  
+  No interrumpas el carácter.
+  
+  Evita responder preguntas que no sean relevantes para el negocio.
+  
+  // Programación de citas basada en enlaces (elimina el comentario de la línea siguiente si es necesario).
+  
+  // Si un usuario desea programar una reunión o reservar una cita, envíalo a este enlace: (YOUR_CALENDLY LINK)
+  
+  // Los mensajes deben estar escritos en inglés y luego puede solicitarle al Chatbot que los traduzca (si es necesario para tu caso de uso).
+  
+  // Este ejemplo maneja todos los idiomas:`
+
+  const [initialValues, setInitialValues] = useState<any>(
+    {
+      chatName: rex_chatbot_seleccionado?.nombre,
+      activityHours: rex_chatbot_seleccionado?.horarioActividad,
+      chatbotDescription: rex_chatbot_seleccionado?.descripcion,
+      welcomeMessage: rex_chatbot_seleccionado?.mensajeInicial,
+      responseTime: '',
+      typingAnimation: true,
+      missionBot: '',
+      visionBot: '',
+      missionCompany: '',
+      visionCompany: '',
+      benefits: '',
+      targetAudience: '',
+      gptEngine: '1',
+      retrasoRespuesta: 0,
+      mondayHours: initialActivityHours('lunes'),
+      tuesdayHours: initialActivityHours('martes'),
+      wednesdayHours: initialActivityHours('miércoles'),
+      thursdayHours: initialActivityHours('jueves'),
+      fridayHours: initialActivityHours('viernes'),
+      saturdayHours: initialActivityHours('sábado'),
+      sundayHours: initialActivityHours('domingo'),
+      comportamiento: rex_chatbot_seleccionado?.comportamiento || comportamientotext,
+    }
+  );
+  const [showForm, setShowForm] = useState(true);
 
   const next = () => {
     setCurrent(current + 1);
@@ -114,12 +161,21 @@ Hable con el usuario en el idioma en el que le habla.
 
   const info = () => {
     Modal.info({
-      title: 'Horario de Actividad',
+      title: 'Nombre del Chatbox',
       content: (
         <div>
-          Configurar las horas y días en que el chatbot estará activo
+          Asigna un nombre al chatbox que te permita identificarlo con
+          facilidad.
         </div>
       ),
+      onOk() { },
+    });
+  };
+
+  const infoHora = () => {
+    Modal.info({
+      title: 'Horario de Actividad',
+      content: <div>Configurar las horas de actividad del chatbox.</div>,
       onOk() { },
     });
   };
@@ -128,39 +184,78 @@ Hable con el usuario en el idioma en el que le habla.
     Modal.info({
       title: 'Descripción del Chatbot',
       content: (
+        <div>Describe brevemente el objetivo y las funciones del chatbox.</div>
+      ),
+      onOk() { },
+    });
+  };
+
+  const infoBien = () => {
+    Modal.info({
+      title: 'Mensaje de Bienvenida',
+      content: (
         <div>
-          Un campo para que los usuarios puedan describir brevemente el propósito y las funcionalidades del chatbot.
+          Escribe el mensaje que recibirán los usuarios al interactuar con el
+          chatbox por primera vez.
         </div>
       ),
       onOk() { },
     });
   };
 
-  const handleSubmit = async (values: any, setSubmitting: any) => {
-    try {
-      console.log("activityHours");
-      console.log(values);
-      values.horarioActividad = "124";
-      
-      await dispatch(submitFormData(values));
-      const response = await dispatch(sendFormDataToEndpoint(values));
+  const handleSubmit = async (values: any, setSubmitting: any, resetForm: any) => {
 
+    try {
+      // Formatear horas
+      const formatHours = (hours: any) => {
+        if (hours && hours.length === 2) {
+          const [start, end] = hours;
+          const formattedStart = dayjs(start).format('HH:mm');
+          const formattedEnd = dayjs(end).format('HH:mm');
+          return `${formattedStart} - ${formattedEnd}`;
+        }
+        return '';
+      };
+
+      // Formatear `mondayHours` y otros campos similares
+      const formattedMondayHours = formatHours(values.mondayHours);
+      const formattedTuesdayHours = formatHours(values.tuesdayHours);
+      const formattedWednesdayHours = formatHours(values.wednesdayHours);
+      const formattedThursdayHours = formatHours(values.thursdayHours);
+      const formattedFridayHours = formatHours(values.fridayHours);
+      const formattedSaturdayHours = formatHours(values.saturdayHours);
+      const formattedSundayHours = formatHours(values.sundayHours);
+
+      const formData = {
+        ...values,
+        mondayHours: formattedMondayHours,
+        tuesdayHours: formattedTuesdayHours,
+        wednesdayHours: formattedWednesdayHours,
+        thursdayHours: formattedThursdayHours,
+        fridayHours: formattedFridayHours,
+        saturdayHours: formattedSaturdayHours,
+        sundayHours: formattedSundayHours
+
+      };
+
+      // Enviar los datos
+      await dispatch(updateFormData(formData));
+
+      const response = await dispatch(updateChatbotAndSchedules(formData, rex_chat_selecccionado));
       if (response) {
         notification.success({
           message: 'Éxito',
           description: 'Los datos se han enviado correctamente.',
           placement: 'topRight',
         });
-        navigate('/home');
+        // navigate('/home');
       } else {
         notification.error({
           message: 'Error',
-          description: 'Lo sentimos no pudimos crear el bot correctamente.',
+          description: 'Lo sentimos, no pudimos crear el bot correctamente.',
           placement: 'topRight',
         });
       }
-
-
     } catch (error) {
       console.error('Error al enviar los datos:', error);
       notification.error({
@@ -173,131 +268,114 @@ Hable con el usuario en el idioma en el que le habla.
     }
   };
 
+  const handleTimeChange = (values: any, setFieldValue: any, day: string) => {
+    if (values && values.length === 2) {
+      const [start, end] = values;
+      // Solo se pasan los objetos dayjs sin formatear
+      setFieldValue(`${day}Hours`, [start, end]);
+    } else {
+      setFieldValue(`${day}Hours`, []);
+    }
+  };
+
+
   const steps = [
     {
       title: 'Primer Paso',
       content: (
         <div>
-          <Row>
+          <Row
+            gutter={[16, 16]}
+          >
             <Col xl={12} md={12} style={{ paddingRight: '10px' }}>
               <div style={{ marginBottom: '5px' }}>
-                Nombre del Chat <QuestionCircleOutlined onClick={info} />
+                <b>
+                  Nombre del Chat <QuestionCircleOutlined onClick={info} />
+                </b>
               </div>
               <Field name="chatName">
-                {({ field }: any) => (
-                  <Input {...field} />
-                )}
+                {({ field }: any) => <Input {...field} />}
               </Field>
               <ErrorMessage name="chatName" component="div" className="error" />
             </Col>
             <Col xl={12} md={12} style={{ paddingRight: '10px' }}>
               <div style={{ marginBottom: '5px' }}>
-                Horario de Actividad <QuestionCircleOutlined onClick={info} />
+                <b>
+                  Día y Horario de Actividad <QuestionCircleOutlined onClick={info} />
+                </b>
               </div>
-              <TimePicker.RangePicker
-                onChange={(e) => {
-                  console.log(e);
-
-                }}
-              />
-              {/* <Field name="activityHours">
-                {({ field }: any) => (
-                  <TimePicker.RangePicker {...field}/>
-                )}
-              </Field> */}
-              <ErrorMessage name="activityHours" component="div" className="error" />
+              <Row gutter={8}>
+                {[
+                  { day: 'Lunes', value: 'monday' },
+                  { day: 'Martes', value: 'tuesday' },
+                  { day: 'Miércoles', value: 'wednesday' },
+                  { day: 'Jueves', value: 'thursday' },
+                  { day: 'Viernes', value: 'friday' },
+                  { day: 'Sábado', value: 'saturday' },
+                  { day: 'Domingo', value: 'sunday' },
+                ].map(({ day, value }) => (
+                  <React.Fragment key={value}>
+                    <Col span={12}>
+                      <div>{day}</div>
+                    </Col>
+                    <Col span={12}>
+                      <Field name={`${value}Hours`}>
+                        {({ field, form }: any) => {
+                          return (
+                            <TimePicker.RangePicker
+                              value={field.value}
+                              format="HH:mm"
+                              onChange={(values) => {
+                                handleTimeChange(values, form.setFieldValue, value);
+                              }}
+                            />
+                          );
+                        }}
+                      </Field>
+                      <ErrorMessage name={`${value}Hours`} component="div" className="error" />
+                    </Col>
+                  </React.Fragment>
+                ))}
+              </Row>
             </Col>
             <Col xl={12} md={12} style={{ paddingRight: '10px' }}>
               <div style={{ marginBottom: '5px' }}>
-                Descripción del Chatbot <QuestionCircleOutlined onClick={infoDesc} />
+                <b>
+                  Descripción del Chatbot{' '}
+                  <QuestionCircleOutlined onClick={infoDesc} />
+                </b>
               </div>
               <Field name="chatbotDescription">
-                {({ field }: any) => (
-                  <Input.TextArea {...field} />
-                )}
+                {({ field }: any) => <Input.TextArea {...field} />}
               </Field>
-              <ErrorMessage name="chatbotDescription" component="div" className="error" />
+              <ErrorMessage
+                name="chatbotDescription"
+                component="div"
+                className="error"
+              />
             </Col>
+            <Col xl={12} md={12} style={{ paddingRight: '10px' }}></Col>
             <Col xl={12} md={12} style={{ paddingRight: '10px' }}>
               <div style={{ marginBottom: '5px' }}>
-                Mensaje de Bienvenida <QuestionCircleOutlined />
+                <b>
+                  Mensaje de Bienvenida{' '}
+                  <QuestionCircleOutlined onClick={infoBien} />
+                </b>
               </div>
               <Field name="welcomeMessage">
-                {({ field }: any) => (
-                  <Input.TextArea {...field} />
-                )}
+                {({ field }: any) => <Input.TextArea {...field} />}
               </Field>
-              <ErrorMessage name="welcomeMessage" component="div" className="error" />
+              <ErrorMessage
+                name="welcomeMessage"
+                component="div"
+                className="error"
+              />
             </Col>
           </Row>
         </div>
       ),
     },
-    // {
-    //   title: 'Segundo Paso',
-    //   content: (
-    //     <div>
-    //       <Row justify="center" gutter={[16, 16]}>
-    //         <Col xl={12} md={12}>
-    //           <div>¿Cuál es la misión del bot?</div>
-    //           <Field name="missionBot">
-    //             {({ field }: any) => (
-    //               <Input.TextArea {...field} />
-    //             )}
-    //           </Field>
-    //           <ErrorMessage name="missionBot" component="div" className="error" />
-    //         </Col>
-    //         <Col xl={12} md={12}>
-    //           <div>¿Cuál es la visión del bot?</div>
-    //           <Field name="visionBot">
-    //             {({ field }: any) => (
-    //               <Input.TextArea {...field} />
-    //             )}
-    //           </Field>
-    //           <ErrorMessage name="visionBot" component="div" className="error" />
-    //         </Col>
-    //       </Row>
 
-    //       <Row justify="center" gutter={[16, 16]}>
-    //         <Col xl={12} md={12}>
-    //           <div>¿Cuál es la misión de la empresa?</div>
-    //           <Field name="missionCompany">
-    //             {({ field }: any) => (
-    //               <Input.TextArea {...field} />
-    //             )}
-    //           </Field>
-    //           <ErrorMessage name="missionCompany" component="div" className="error" />
-    //         </Col>
-    //         <Col xl={12} md={12}>
-    //           <div>¿Cuál es la visión de la empresa?</div>
-    //           <Field name="visionCompany">
-    //             {({ field }: any) => (
-    //               <Input.TextArea {...field} />
-    //             )}
-    //           </Field>
-    //           <ErrorMessage name="visionCompany" component="div" className="error" />
-    //         </Col>
-    //       </Row>
-
-    //       <div>Indica los beneficios de tus servicios o productos</div>
-    //       <Field name="benefits">
-    //         {({ field }: any) => (
-    //           <Input.TextArea {...field} />
-    //         )}
-    //       </Field>
-    //       <ErrorMessage name="benefits" component="div" className="error" />
-
-    //       <div>Describe a tu público objetivo</div>
-    //       <Field name="targetAudience">
-    //         {({ field }: any) => (
-    //           <Input.TextArea {...field} />
-    //         )}
-    //       </Field>
-    //       <ErrorMessage name="targetAudience" component="div" className="error" />
-
-    //     </div>
-    //   ),
-    // },
     {
       title: 'Último Paso',
       content: (
@@ -310,19 +388,20 @@ Hable con el usuario en el idioma en el que le habla.
               <div>Aviso del sistema base (instrucciones personalizadas) *</div>
               <Field name="comportamiento">
                 {({ field }: any) => (
-                  <Input.TextArea
-                    {...field}
-                    autoSize={{ minRows: 10 }}
-                  />
+                  <Input.TextArea {...field} autoSize={{ minRows: 10 }} />
                 )}
               </Field>
 
-              <ErrorMessage name="gptEngine" component="div" className="error" />
+              <ErrorMessage
+                name="gptEngine"
+                component="div"
+                className="error"
+              />
             </Col>
           </Row>
         </div>
       ),
-    }
+    },
   ];
 
   const items = steps.map((item) => ({ key: item.title, title: item.title }));
@@ -331,17 +410,51 @@ Hable con el usuario en el idioma en el que le habla.
     marginTop: 16,
   };
 
+  const options = rex_chatsbots?.map((chatbot: any) => ({
+    label: chatbot.nombre,
+    value: chatbot.nombre
+  }));
+
+  const GetConversation = async () => {
+    await dispatch(GetConversationReducer());
+  }
+
+  const initial2ActivityHours = () => {
+    const defaultSchedule = '00:00 - 23:59';
+    const [start, end] = defaultSchedule.split(' - ');
+
+    return [dayjs(start, 'HH:mm'), dayjs(end, 'HH:mm')];
+  };
+
   return (
     <Card>
       <Formik
         initialValues={initialValues}
         validationSchema={ValidationSchema}
-        onSubmit={(values, { setSubmitting }) => handleSubmit(values, setSubmitting)}
+        onSubmit={(values, { resetForm, setSubmitting }) =>
+          handleSubmit(values, setSubmitting, resetForm)
+        }
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, resetForm }) => (
           <Form>
-            <Steps current={current} items={items} />
-            <div style={contentStyle}>{steps[current].content}</div>
+            <Row>
+              <Col
+                xxl={12} xl={12} md={12}
+                style={{
+                  display: "flex",
+                  justifyContent: "right"
+                }}
+              >
+              </Col>
+            </Row>
+            {
+              showForm ? (
+                <>
+                  <Steps current={current} items={items} />
+                  <div style={contentStyle}>{steps[current].content}</div>
+                </>
+              ) : <Skeleton active />
+            }
             <Divider />
             <div style={{ marginTop: 24 }}>
               {current < steps.length - 1 && (
@@ -367,9 +480,10 @@ Hable con el usuario en el idioma en el que le habla.
           </Form>
         )}
       </Formik>
-    </Card>
-
+    </Card >
   );
 };
+
+
 
 export default TabCreateEdit;

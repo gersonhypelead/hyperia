@@ -5,7 +5,7 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { updateUser } from '../../../redux/actions/users/usuariosActions';
 import { AppDispatch } from '../../../redux/store/store';
-import { fetchTiposUsuarios } from '../../../redux/actions/tipo_usuarios/tiposUsuariosActions';
+import { FetchTiposUsuariosReducer } from '../../../redux/actions/tipo_usuarios/tiposUsuariosActions';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -35,7 +35,7 @@ const UserProfile: React.FC = () => {
 
 
   useEffect(() => {
-    dispatch(fetchTiposUsuarios());
+    dispatch(FetchTiposUsuariosReducer());
   }, [dispatch]);
 
   useEffect(() => {
@@ -68,7 +68,7 @@ const UserProfile: React.FC = () => {
 
   const handleSubmit = async (values: UserProfileValues) => {
     try {
-      const updatedUser = {
+      const userData = {
         id: rex_user_auth.id,
         nombre: values.nombre,
         apellido_paterno: values.apellido_paterno,
@@ -76,9 +76,9 @@ const UserProfile: React.FC = () => {
         usuario: values.usuario,
         tipo_usuario_id: values.tipo_usuario_id,
       };
-      await dispatch(updateUser(updatedUser));
+      await dispatch(updateUser(rex_user_auth.id,userData));
       message.success('Usuario actualizado con éxito');
-      // window.location.reload();
+      window.location.reload();
     } catch (error) {
       message.error('Error al actualizar el usuario');
       console.error('Error al actualizar el usuario:', error);

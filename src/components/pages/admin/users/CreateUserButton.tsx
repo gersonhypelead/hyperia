@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Button } from 'antd';
 import CreateUserModal from './CreateUserModal';
+
 const CreateUserButton: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -15,7 +16,7 @@ const CreateUserButton: React.FC = () => {
 
   return (
     <>
-      <Button type="primary" onClick={showModal}>
+      <Button type="primary" onClick={showModal} className="boton-crear">
         Crear Usuario
       </Button>
       <CreateUserModal visible={isModalVisible} onClose={handleCloseModal} />

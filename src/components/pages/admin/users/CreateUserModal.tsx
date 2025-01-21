@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { Modal, Form, Input, Select, message } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchTiposUsuarios } from '../../../../redux/actions/tipo_usuarios/tiposUsuariosActions';
+import { FetchTiposUsuariosReducer } from '../../../../redux/actions/tipo_usuarios/tiposUsuariosActions';
 import { RootState, AppDispatch } from '../../../../redux/store/store';
 import { FetchUsuariosReducer, createUser } from '../../../../redux/actions/users/usuariosActions';
 
@@ -24,7 +24,7 @@ const CreateUserModal: React.FC<CreateUserModalProps> = ({ visible, onClose }) =
   } = useSelector(({tipoUsuarios}: any) => tipoUsuarios);
 
   useEffect(() => {
-    dispatch(fetchTiposUsuarios());
+    dispatch(FetchTiposUsuariosReducer());
   }, [dispatch]);
 
   const handleCreateUser = async () => {
@@ -71,13 +71,13 @@ const CreateUserModal: React.FC<CreateUserModalProps> = ({ visible, onClose }) =
           <Input />
         </Form.Item>
         <Form.Item
-          name="usuario"
-          label="Usuario"
-          rules={[{ required: true, message: 'Por favor ingrese el nombre de usuario' }]}
+          name="email"
+          label="Email"
+          rules={[{ required: true, message: 'Por favor ingrese el email de usuario' }]}
         >
           <Input />
         </Form.Item>
-        <Form.Item
+        {/* <Form.Item
           name="tipo_usuario_id"
           label="Tipo Usuario"
           rules={[{ required: true, message: 'Por favor seleccione el tipo de usuario' }]}
@@ -89,7 +89,7 @@ const CreateUserModal: React.FC<CreateUserModalProps> = ({ visible, onClose }) =
               </Select.Option>
             ))}
           </Select>
-        </Form.Item>
+        </Form.Item> */}
         <Form.Item
           name="contrasena"
           label="Contraseña"

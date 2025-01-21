@@ -1,6 +1,6 @@
 import { Layout, Avatar, Dropdown, Menu } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { UserOutlined, SettingOutlined, LogoutOutlined } from '@ant-design/icons';
+import { UserOutlined, CreditCardOutlined, LogoutOutlined } from '@ant-design/icons';
 import './styled.css';
 
 interface NavbarProps {
@@ -12,8 +12,11 @@ const Navbar: React.FC<NavbarProps> = ({ colorBgContainer }) => {
   const { Header } = Layout;
 
   const handleLogout = () => {
-    // localStorage.removeItem('token');
-    localStorage.clear();
+
+    //localStorage.clear();
+    localStorage.removeItem('ip');
+    localStorage.removeItem('token');
+    localStorage.removeItem('conversacion_support'); 
     navigate('/login');
   };
 
@@ -23,7 +26,7 @@ const Navbar: React.FC<NavbarProps> = ({ colorBgContainer }) => {
         <UserOutlined /> Ver Perfil
       </Menu.Item>
       <Menu.Item key="settings" onClick={() => navigate('/settings')}>
-        <SettingOutlined /> Configuración
+        <CreditCardOutlined /> Mi Suscripción
       </Menu.Item>
       <Menu.Item key="logout" onClick={handleLogout}>
         <LogoutOutlined /> Cerrar Sesión
@@ -32,13 +35,13 @@ const Navbar: React.FC<NavbarProps> = ({ colorBgContainer }) => {
   );
 
   return (
-    <Header style={{ background: colorBgContainer }}>
+    <Header style={{ background: "white" }} color='white' >
       <div
         style={{
           height: '100%',
           display: 'flex',
           justifyContent: 'end',
-          alignItems: 'center',
+          alignItems: 'center'
         }}
       >
         <Dropdown
